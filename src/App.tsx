@@ -281,11 +281,6 @@ export default function App() {
   if (isPlaying) {
     return (
       <div className="fixed inset-0 h-screen w-screen overflow-hidden bg-gradient-to-b from-slate-950 via-indigo-950 to-slate-950 flex flex-col items-center justify-center p-0.5 z-50">
-        <div className="mb-1 select-none pointer-events-none text-center">
-          <span className="text-[10px] font-black text-amber-500 tracking-wider uppercase animate-pulse">
-            🟢 PLAYING ACTIVE
-          </span>
-        </div>
         
         <GameBoard
           selectedSkin={selectedSkin}

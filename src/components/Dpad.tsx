@@ -55,12 +55,12 @@ export default function Dpad({ currentDirection, onChangeDirection, onPauseToggl
               onPauseToggle();
             }
           }}
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[4.2rem] h-[4.2rem] lg:w-[2.2rem] lg:h-[2.2rem] bg-amber-400 dark:bg-amber-500 border-4 lg:border-2 border-amber-600 rounded-full flex flex-col items-center justify-center shadow-md transition-all duration-100 active:scale-90 active:brightness-90 hover:brightness-105 select-none cursor-pointer z-20"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[2.4rem] h-[2.4rem] lg:w-[2.2rem] lg:h-[2.2rem] bg-amber-400 dark:bg-amber-500 border-2 border-amber-600 rounded-full flex flex-col items-center justify-center shadow-md transition-all duration-100 active:scale-90 active:brightness-90 hover:brightness-105 select-none cursor-pointer z-20"
           id="dpad-center-pause"
           title="Pause / Resume Game"
         >
-          <span className="text-[10px] lg:text-[7px] font-black text-slate-950 tracking-tight leading-none">PAUSE</span>
-          <span className="text-base lg:text-[10px] mt-0.5 leading-none">🐍</span>
+          <span className="text-[7px] font-black text-slate-950 tracking-tight leading-none">PAUSE</span>
+          <span className="text-[10px] mt-0.5 leading-none">🐍</span>
         </button>
 
         {/* RIGHT Button */}

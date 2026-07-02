@@ -1995,11 +1995,11 @@ export default function GameBoard({
   };
 
   return (
-    <div className="flex flex-col lg:flex-row items-center lg:items-stretch w-full max-w-[650px] lg:max-w-[950px] bg-slate-200 dark:bg-slate-800 p-0.5 sm:p-1.5 lg:p-3 rounded-[2rem] lg:rounded-none border-4 border-amber-400 dark:border-amber-500 shadow-[0_24px_50px_rgba(0,0,0,0.35)] gap-2 lg:gap-4 mx-auto relative overflow-hidden">
+    <div className="flex flex-col lg:flex-row items-center lg:items-stretch w-full max-w-[650px] lg:max-w-[950px] bg-slate-200 dark:bg-slate-800 p-0.5 sm:p-1.5 lg:p-3 rounded-none border-4 border-amber-400 dark:border-amber-500 shadow-[0_24px_50px_rgba(0,0,0,0.35)] gap-2 lg:gap-4 mx-auto relative overflow-hidden">
       
       {/* MID-GAME OPTIONS OVERLAY MENU WHEN PAUSED - Now full translucent floating card styled! */}
       {isPaused && (
-        <div className="absolute inset-0 bg-slate-950/45 backdrop-blur-[1.5px] z-30 flex flex-col items-center justify-center p-4 sm:p-6 overflow-y-auto rounded-[2rem] lg:rounded-none animate-fade-in">
+        <div className="absolute inset-0 bg-slate-950/45 backdrop-blur-[1.5px] z-30 flex flex-col items-center justify-center p-4 sm:p-6 overflow-y-auto rounded-none animate-fade-in">
           <div className="w-full max-w-sm bg-slate-950/95 border-2 border-amber-400/90 shadow-[0_24px_50px_rgba(0,0,0,0.8)] rounded-3xl p-5 flex flex-col max-h-[92vh] overflow-y-auto select-none">
             <div className="w-full text-center">
               <h3 className="text-xl sm:text-2xl font-black text-amber-400 tracking-tight uppercase">
@@ -2202,8 +2202,11 @@ export default function GameBoard({
         {/* Sleek Arcade Top Header */}
       <div className="w-full flex justify-between items-center px-1.5 select-none">
         <div className="flex items-center gap-1.5">
-          <div className="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse shadow-[0_0_8px_#EF4444]" />
+          <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_#10B981]" />
           <span className="text-[10px] sm:text-xs font-black text-slate-700 dark:text-slate-200 tracking-wider">SLINKY ARCADE</span>
+          <span className="text-[9px] font-black text-emerald-500 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20 uppercase tracking-wider animate-pulse ml-1.5">
+            🟢 PLAYING ACTIVE
+          </span>
         </div>
         
         {/* Unified Bezel HUD Bar (Inside Arcade cabinet header, outside the active canvas to prevent any overlaps!) */}
