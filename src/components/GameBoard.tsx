@@ -1995,7 +1995,7 @@ export default function GameBoard({
   };
 
   return (
-    <div className="flex flex-col lg:flex-row items-center lg:items-stretch w-full max-w-[650px] lg:max-w-[1100px] bg-slate-200 dark:bg-slate-800 p-0.5 sm:p-1.5 lg:p-4 rounded-none border-4 border-amber-400 dark:border-amber-500 shadow-[0_24px_50px_rgba(0,0,0,0.35)] gap-1 lg:gap-6 mx-auto relative overflow-hidden">
+    <div className="flex flex-col lg:flex-row items-center lg:items-stretch w-full h-full lg:h-auto lg:max-h-[95vh] max-w-none lg:max-w-[1150px] bg-slate-200 dark:bg-slate-800 p-1 sm:p-2 lg:p-4 rounded-none lg:rounded-3xl border-4 border-amber-400 dark:border-amber-500 shadow-[0_24px_50px_rgba(0,0,0,0.35)] gap-1 lg:gap-6 mx-auto relative overflow-hidden">
       
       {/* MID-GAME OPTIONS OVERLAY MENU WHEN PAUSED - Now full translucent floating card styled! */}
       {isPaused && (
@@ -2318,8 +2318,8 @@ export default function GameBoard({
       {/* LEFT PANEL END */}
       </div>
 
-      {/* RIGHT PANEL: Dpad & Controller Section - PC width optimized (35%) */}
-      <div className="w-full lg:w-[35%] flex flex-col justify-center items-center pt-1.5 lg:pt-0 border-t-2 lg:border-t-0 lg:border-l-2 border-slate-300 dark:border-slate-700/50 px-2 lg:px-4">
+      {/* RIGHT PANEL: Dpad & Controller Section - PC width optimized (35%), mobile height optimized (flex-1) */}
+      <div className="w-full lg:w-[35%] flex-1 flex flex-col justify-center items-center py-2 lg:py-0 border-t-2 lg:border-t-0 lg:border-l-2 border-slate-300 dark:border-slate-700/50 px-2 lg:px-4 min-h-0">
         <Dpad
           currentDirection={direction}
           onChangeDirection={(dir) => {

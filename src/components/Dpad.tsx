@@ -26,12 +26,12 @@ export default function Dpad({ currentDirection, onChangeDirection, onPauseToggl
       </span>
       
       {/* Expanded Direction Pad layout with spacious, perfectly symmetrical centering gaps */}
-      <div className="relative w-44 h-44 sm:w-56 sm:h-56 lg:w-44 lg:h-44">
+      <div className="relative w-[13.75rem] h-[13.75rem] sm:w-[17.5rem] sm:h-[17.5rem] lg:w-[13.75rem] lg:h-[13.75rem]">
         {/* UP Button */}
         <button
           onClick={() => handlePress('UP')}
           disabled={currentDirection === 'DOWN'}
-          className="absolute top-0 left-1/2 -translate-x-1/2 w-12 h-12 sm:w-16 sm:h-16 lg:w-11 lg:h-11 bg-rose-400 hover:bg-rose-500 disabled:opacity-40 border-2 sm:border-4 lg:border-2 border-rose-600 rounded-2xl flex items-center justify-center transition-all duration-100 active:scale-90 active:brightness-90 hover:brightness-105 text-white font-extrabold text-xl sm:text-2xl lg:text-lg select-none cursor-pointer z-10 shadow-md"
+          className="absolute top-0 left-1/2 -translate-x-1/2 w-[3.75rem] h-[3.75rem] sm:w-[5rem] sm:h-[5rem] lg:w-[3.4rem] lg:h-[3.4rem] bg-rose-400 hover:bg-rose-500 disabled:opacity-40 border-2 sm:border-4 lg:border-2 border-rose-600 rounded-2xl flex items-center justify-center transition-all duration-100 active:scale-90 active:brightness-90 hover:brightness-105 text-white font-extrabold text-xl sm:text-2xl lg:text-lg select-none cursor-pointer z-10 shadow-md"
           id="dpad-up"
         >
           ▲
@@ -41,7 +41,7 @@ export default function Dpad({ currentDirection, onChangeDirection, onPauseToggl
         <button
           onClick={() => handlePress('LEFT')}
           disabled={currentDirection === 'RIGHT'}
-          className="absolute left-0 top-1/2 -translate-y-1/2 w-12 h-12 sm:w-16 sm:h-16 lg:w-11 lg:h-11 bg-emerald-400 hover:bg-emerald-500 disabled:opacity-40 border-2 sm:border-4 lg:border-2 border-emerald-600 rounded-2xl flex items-center justify-center transition-all duration-100 active:scale-90 active:brightness-90 hover:brightness-105 text-white font-extrabold text-xl sm:text-2xl lg:text-lg select-none cursor-pointer z-10 shadow-md"
+          className="absolute left-0 top-1/2 -translate-y-1/2 w-[3.75rem] h-[3.75rem] sm:w-[5rem] sm:h-[5rem] lg:w-[3.4rem] lg:h-[3.4rem] bg-emerald-400 hover:bg-emerald-500 disabled:opacity-40 border-2 sm:border-4 lg:border-2 border-emerald-600 rounded-2xl flex items-center justify-center transition-all duration-100 active:scale-90 active:brightness-90 hover:brightness-105 text-white font-extrabold text-xl sm:text-2xl lg:text-lg select-none cursor-pointer z-10 shadow-md"
           id="dpad-left"
         >
           ◀
@@ -55,7 +55,7 @@ export default function Dpad({ currentDirection, onChangeDirection, onPauseToggl
               onPauseToggle();
             }
           }}
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[2.2rem] h-[2.2rem] sm:w-[3.2rem] sm:h-[3.2rem] lg:w-[2.2rem] lg:h-[2.2rem] bg-amber-400 dark:bg-amber-500 border-2 border-amber-600 rounded-full flex flex-col items-center justify-center shadow-md transition-all duration-100 active:scale-90 active:brightness-90 hover:brightness-105 select-none cursor-pointer z-20"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[2.53rem] h-[2.53rem] sm:w-[3.68rem] sm:h-[3.68rem] lg:w-[2.53rem] lg:h-[2.53rem] bg-amber-400 dark:bg-amber-500 border-2 border-amber-600 rounded-full flex flex-col items-center justify-center shadow-md transition-all duration-100 active:scale-90 active:brightness-90 hover:brightness-105 select-none cursor-pointer z-20"
           id="dpad-center-pause"
           title="Pause / Resume Game"
         >
@@ -67,7 +67,7 @@ export default function Dpad({ currentDirection, onChangeDirection, onPauseToggl
         <button
           onClick={() => handlePress('RIGHT')}
           disabled={currentDirection === 'LEFT'}
-          className="absolute right-0 top-1/2 -translate-y-1/2 w-12 h-12 sm:w-16 sm:h-16 lg:w-11 lg:h-11 bg-sky-400 hover:bg-sky-500 disabled:opacity-40 border-2 sm:border-4 lg:border-2 border-sky-600 rounded-2xl flex items-center justify-center transition-all duration-100 active:scale-90 active:brightness-90 hover:brightness-105 text-white font-extrabold text-xl sm:text-2xl lg:text-lg select-none cursor-pointer z-10 shadow-md"
+          className="absolute right-0 top-1/2 -translate-y-1/2 w-[3.75rem] h-[3.75rem] sm:w-[5rem] sm:h-[5rem] lg:w-[3.4rem] lg:h-[3.4rem] bg-sky-400 hover:bg-sky-500 disabled:opacity-40 border-2 sm:border-4 lg:border-2 border-sky-600 rounded-2xl flex items-center justify-center transition-all duration-100 active:scale-90 active:brightness-90 hover:brightness-105 text-white font-extrabold text-xl sm:text-2xl lg:text-lg select-none cursor-pointer z-10 shadow-md"
           id="dpad-right"
         >
           ▶
@@ -77,7 +77,7 @@ export default function Dpad({ currentDirection, onChangeDirection, onPauseToggl
         <button
           onClick={() => handlePress('DOWN')}
           disabled={currentDirection === 'UP'}
-          className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-12 sm:w-16 sm:h-16 lg:w-11 lg:h-11 bg-violet-400 hover:bg-violet-500 disabled:opacity-40 border-2 sm:border-4 lg:border-2 border-violet-600 rounded-2xl flex items-center justify-center transition-all duration-100 active:scale-90 active:brightness-90 hover:brightness-105 text-white font-extrabold text-xl sm:text-2xl lg:text-lg select-none cursor-pointer z-10 shadow-md"
+          className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[3.75rem] h-[3.75rem] sm:w-[5rem] sm:h-[5rem] lg:w-[3.4rem] lg:h-[3.4rem] bg-violet-400 hover:bg-violet-500 disabled:opacity-40 border-2 sm:border-4 lg:border-2 border-violet-600 rounded-2xl flex items-center justify-center transition-all duration-100 active:scale-90 active:brightness-90 hover:brightness-105 text-white font-extrabold text-xl sm:text-2xl lg:text-lg select-none cursor-pointer z-10 shadow-md"
           id="dpad-down"
         >
           ▼

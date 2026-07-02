@@ -280,7 +280,7 @@ export default function App() {
   // Reduced outer padding by 75% (changed p-2.5 to p-0.5) as requested!
   if (isPlaying) {
     return (
-      <div className="fixed inset-0 h-screen w-screen overflow-hidden bg-gradient-to-b from-slate-950 via-indigo-950 to-slate-950 flex flex-col items-center justify-center p-0.5 z-50">
+      <div className="fixed inset-0 h-screen w-screen overflow-hidden bg-gradient-to-b from-slate-950 via-indigo-950 to-slate-950 flex flex-col items-center justify-center p-0 lg:p-4 z-50">
         
         <GameBoard
           selectedSkin={selectedSkin}
