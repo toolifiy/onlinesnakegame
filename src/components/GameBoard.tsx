@@ -1995,11 +1995,11 @@ export default function GameBoard({
   };
 
   return (
-    <div className="flex flex-col items-center w-full max-w-[650px] bg-slate-200 dark:bg-slate-800 p-0.5 sm:p-1.5 rounded-[2rem] border-4 border-amber-400 dark:border-amber-500 shadow-[0_24px_50px_rgba(0,0,0,0.35)] gap-2 mx-auto relative">
+    <div className="flex flex-col lg:flex-row items-center lg:items-stretch w-full max-w-[650px] lg:max-w-[950px] bg-slate-200 dark:bg-slate-800 p-0.5 sm:p-1.5 lg:p-3 rounded-[2rem] lg:rounded-none border-4 border-amber-400 dark:border-amber-500 shadow-[0_24px_50px_rgba(0,0,0,0.35)] gap-2 lg:gap-4 mx-auto relative overflow-hidden">
       
       {/* MID-GAME OPTIONS OVERLAY MENU WHEN PAUSED - Now full translucent floating card styled! */}
       {isPaused && (
-        <div className="absolute inset-0 bg-slate-950/45 backdrop-blur-[1.5px] z-30 flex flex-col items-center justify-center p-4 sm:p-6 overflow-y-auto rounded-[2rem] animate-fade-in">
+        <div className="absolute inset-0 bg-slate-950/45 backdrop-blur-[1.5px] z-30 flex flex-col items-center justify-center p-4 sm:p-6 overflow-y-auto rounded-[2rem] lg:rounded-none animate-fade-in">
           <div className="w-full max-w-sm bg-slate-950/95 border-2 border-amber-400/90 shadow-[0_24px_50px_rgba(0,0,0,0.8)] rounded-3xl p-5 flex flex-col max-h-[92vh] overflow-y-auto select-none">
             <div className="w-full text-center">
               <h3 className="text-xl sm:text-2xl font-black text-amber-400 tracking-tight uppercase">
@@ -2196,7 +2196,10 @@ export default function GameBoard({
         </div>
       )}
 
-      {/* Sleek Arcade Top Header */}
+      {/* LEFT PANEL: Header and Screen Section */}
+      <div className="w-full lg:w-[55%] flex flex-col items-center gap-2">
+
+        {/* Sleek Arcade Top Header */}
       <div className="w-full flex justify-between items-center px-1.5 select-none">
         <div className="flex items-center gap-1.5">
           <div className="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse shadow-[0_0_8px_#EF4444]" />
@@ -2321,8 +2324,11 @@ export default function GameBoard({
         </div>
       </div>
 
-      {/* 3. Dpad Section (Positioned directly under the screen) - Slinky-80 space removed, controls moved up */}
-      <div className="w-full pt-1.5 border-t-2 border-slate-300 dark:border-slate-700/50">
+      {/* LEFT PANEL END */}
+      </div>
+
+      {/* RIGHT PANEL: Dpad & Controller Section */}
+      <div className="w-full lg:w-[45%] flex flex-col justify-center items-center pt-1.5 lg:pt-0 border-t-2 lg:border-t-0 lg:border-l-2 border-slate-300 dark:border-slate-700/50 px-2 lg:px-4">
         <Dpad
           currentDirection={direction}
           onChangeDirection={(dir) => {
