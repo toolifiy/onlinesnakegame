@@ -2204,9 +2204,6 @@ export default function GameBoard({
         <div className="flex items-center gap-1.5">
           <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_#10B981]" />
           <span className="text-[10px] sm:text-xs font-black text-slate-700 dark:text-slate-200 tracking-wider">SLINKY ARCADE</span>
-          <span className="text-[9px] font-black text-emerald-500 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20 uppercase tracking-wider animate-pulse ml-1.5">
-            🟢 PLAYING ACTIVE
-          </span>
         </div>
         
         {/* Unified Bezel HUD Bar (Inside Arcade cabinet header, outside the active canvas to prevent any overlaps!) */}
