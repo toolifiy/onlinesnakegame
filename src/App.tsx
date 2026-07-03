@@ -7,6 +7,7 @@ import SkinSelector from './components/SkinSelector';
 import SnakeHeadPreview from './components/SnakeHeadPreview';
 import PowerUpGuide from './components/PowerUpGuide';
 import AchievementsBox from './components/AchievementsBox';
+import AdsterraBanner from './components/AdsterraBanner';
 import { playClickSound, playAchievementSound, setSoundEnabled, getSoundEnabled, setSoundVolume, getSoundVolume } from './utils/audio';
 
 export default function App() {
@@ -541,6 +542,10 @@ export default function App() {
               If you have any questions regarding this Privacy Policy, you can reach out to us using the "Contact Us" page.
             </div>
 
+            <div className="w-full flex justify-center py-4">
+              <AdsterraBanner adKey="4923cc907dacca0d26355c8f49f110ed" width={160} height={600} />
+            </div>
+
             <div className="flex justify-center pt-2">
               <button
                 onClick={() => { playClickSound(); setActivePage('HOME'); }}
@@ -642,6 +647,10 @@ export default function App() {
               Please respect our Terms of Use to ensure the arcade gaming community remains fair and competitive.
             </div>
 
+            <div className="w-full flex justify-center py-4">
+              <AdsterraBanner adKey="4923cc907dacca0d26355c8f49f110ed" width={160} height={600} />
+            </div>
+
             <div className="flex justify-center pt-2">
               <button
                 onClick={() => { playClickSound(); setActivePage('HOME'); }}
@@ -693,6 +702,9 @@ export default function App() {
 
         {/* CONTENT COLUMN */}
         <main className="flex-grow max-w-5xl w-full mx-auto px-4 py-8 sm:px-6 md:px-8">
+          <div className="w-full flex justify-center mb-6">
+            <AdsterraBanner adKey="4923cc907dacca0d26355c8f49f110ed" width={160} height={600} />
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
             
             {/* INSTAGRAM & SOCIAL CHANNEL CARD (4 cols) */}
@@ -847,6 +859,9 @@ export default function App() {
               )}
             </div>
 
+          </div>
+          <div className="w-full flex justify-center mt-6">
+            <AdsterraBanner adKey="4923cc907dacca0d26355c8f49f110ed" width={160} height={600} />
           </div>
         </main>
       </div>
@@ -1189,11 +1204,16 @@ export default function App() {
 
         </div>
 
+        {/* Small Mobile Banner Ad */}
+        <div className="w-full flex justify-center py-2">
+          <AdsterraBanner adKey="db3a79e12aa161ce3f5a8e4e34162c60" width={468} height={60} />
+        </div>
+
         {/* ROW 2: SCORES, POWERUP GUIDES & ACHIEVEMENTS (At the bottom) */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start mt-4 border-t border-slate-300/40 dark:border-slate-800/40 pt-6">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-6 items-start mt-4 border-t border-slate-300/40 dark:border-slate-800/40 pt-6">
           
           {/* 1. Score Center */}
-          <div className="bg-amber-100/80 dark:bg-slate-800/80 p-5 rounded-3xl border-4 border-amber-400 shadow-md flex flex-col gap-3 h-full justify-between">
+          <div className="bg-amber-100/80 dark:bg-slate-800/80 p-5 rounded-3xl border-4 border-amber-400 shadow-md flex flex-col gap-3 h-full justify-between md:col-span-1">
             <div>
               <h3 className="text-xs font-black text-amber-800 dark:text-amber-400 text-center uppercase tracking-widest mb-2.5">
                 🏆 Score Center 🏆
@@ -1219,11 +1239,25 @@ export default function App() {
             </div>
           </div>
 
+          {/* Medium Ad Box 1 */}
+          <div className="flex justify-center items-center h-full py-1 md:col-span-1">
+            <AdsterraBanner adKey="bb6586562ba9e600bfde4e38d14ba022" width={160} height={300} />
+          </div>
+
           {/* 2. Power-Up Items Guide */}
-          <PowerUpGuide />
+          <div className="md:col-span-1">
+            <PowerUpGuide />
+          </div>
+
+          {/* Medium Ad Box 2 */}
+          <div className="flex justify-center items-center h-full py-1 md:col-span-1">
+            <AdsterraBanner adKey="c5bdb30469010828e32529cd44eafd76" width={160} height={300} />
+          </div>
 
           {/* 3. Achievements list */}
-          <AchievementsBox unlockedList={unlockedAchievements} />
+          <div className="md:col-span-1">
+            <AchievementsBox unlockedList={unlockedAchievements} />
+          </div>
 
         </div>
 
@@ -1238,6 +1272,9 @@ export default function App() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 text-sm leading-relaxed">
           {/* Left Column */}
           <div className="flex flex-col gap-6">
+            {/* Top of Left Column Ad */}
+            <AdsterraBanner adKey="4923cc907dacca0d26355c8f49f110ed" width={160} height={600} />
+
             <div>
               <h3 className="text-lg font-extrabold text-violet-600 dark:text-violet-400 mb-2 flex items-center gap-2">
                 🎮 1. Slinky Snake Adventures 2D - A Brand New Modern Arcade Era
@@ -1285,10 +1322,16 @@ export default function App() {
                 <li><strong>Magical Blue Booster:</strong> +50 points - Laboratory elixir that grants high velocity decaying slowly over 10 seconds.</li>
               </ul>
             </div>
+
+            {/* Bottom of Left Column Ad */}
+            <AdsterraBanner adKey="4923cc907dacca0d26355c8f49f110ed" width={160} height={600} />
           </div>
 
           {/* Right Column */}
           <div className="flex flex-col gap-6">
+            {/* Top of Right Column Ad */}
+            <AdsterraBanner adKey="4923cc907dacca0d26355c8f49f110ed" width={160} height={600} />
+
             <div>
               <h3 className="text-lg font-extrabold text-violet-600 dark:text-violet-400 mb-2 flex items-center gap-2">
                 ⚡ 4. Dynamic Combo Multipliers & Musical Tones
@@ -1324,6 +1367,9 @@ export default function App() {
                 We respect your privacy completely. Slinky Snake Adventures 2D runs entirely on the client side; no emails, personal records, IP addresses, or gameplay statistics are ever transmitted to any external server. Your unlocked achievements, highscores, and selected skins are securely saved in your browser's local storage (LocalStorage), allowing you to pick up exactly where you left off!
               </p>
             </div>
+
+            {/* Bottom of Right Column Ad */}
+            <AdsterraBanner adKey="4923cc907dacca0d26355c8f49f110ed" width={160} height={600} />
           </div>
         </div>
 

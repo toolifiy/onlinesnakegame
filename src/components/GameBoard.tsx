@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { RotateCcw, Gem } from 'lucide-react';
 import { Direction, Position, Particle, FloatingText, Food, FoodType, Skin, LevelConfig, GameMode } from '../types';
 import { playEatSound, playCrashSound, playLevelUpSound, playClickSound, initAudio } from '../utils/audio';
 import { SNAKE_SKINS, BOARD_THEMES, BoardTheme, ALL_FOOD_TEMPLATES } from '../data';
@@ -121,6 +122,7 @@ export default function GameBoard({
   const [boosterEatenCount, setBoosterEatenCount] = useState(0);
   const boosterEatenCountRef = useRef<number>(0);
   const [showExitConfirm, setShowExitConfirm] = useState(false);
+  const [showRespawnMenu, setShowRespawnMenu] = useState(false);
   // High score explosion / blast animation states
   const [hasBrokenRecord, setHasBrokenRecord] = useState(false);
   const [blastActive, setBlastActive] = useState(false);
@@ -234,6 +236,70 @@ export default function GameBoard({
   const moveProgressRef = useRef<number>(1.0);
   const animationFrameIdRef = useRef<number | null>(null);
   const headEatAnimRef = useRef<number>(0);
+
+  // Helper to handle snake collision and show Respawn or Restart prompt
+  const handleSnakeCrash = () => {
+    playCrashSound();
+    screenShakeRef.current = 10;
+    setIsLizardPaused(true);
+    setShowRespawnMenu(true);
+  };
+
+  const handleRestartClick = () => {
+    playClickSound();
+    setShowRespawnMenu(false);
+    setIsLizardPaused(false);
+    setIsLizardDelay(false);
+    
+    // Reset score and combo in parent state
+    onScoreChange(0, 1);
+    
+    // Start fresh local board
+    resetGame();
+  };
+
+  const handleRespawnClick = () => {
+    playClickSound();
+    
+    // Open Adsterra direct link in a new window/tab as requested
+    window.open('https://www.effectivecpmnetwork.com/q0dqbk3ca0?key=7d2a5c93906795732e09f636bb6ac68a', '_blank');
+
+    setShowRespawnMenu(false);
+    
+    // 3 second countdown
+    let count = 3;
+    setCountdown(count);
+    
+    const interval = setInterval(() => {
+      count -= 1;
+      if (count <= 0) {
+        clearInterval(interval);
+        setCountdown(null);
+        
+        // Grant temporary invincibility (immortal ghost) for 5 seconds
+        setActiveEffects(prev => ({ ...prev, immortal: 5000 }));
+        activeEffectsRef.current.immortal = 5000;
+        
+        // Resume play
+        setIsLizardPaused(false);
+        setIsLizardDelay(false);
+        
+        // Adjust head coordinates if it was out of borders
+        const currentSnake = [...snakeRef.current];
+        if (currentSnake.length > 0) {
+          const head = currentSnake[0];
+          if (head.x < 0) head.x = 0;
+          if (head.x >= GRID_SIZE) head.x = GRID_SIZE - 1;
+          if (head.y < 0) head.y = 0;
+          if (head.y >= GRID_SIZE) head.y = GRID_SIZE - 1;
+          setSnake(currentSnake);
+          snakeRef.current = currentSnake;
+        }
+      } else {
+        setCountdown(count);
+      }
+    }, 1000);
+  };
 
   // Initialize/Reset Game
   const resetGame = () => {
@@ -580,15 +646,7 @@ export default function GameBoard({
         nextHead.y = (nextHead.y + GRID_SIZE) % GRID_SIZE;
       } else {
         // Level Mode: crash!
-        playCrashSound();
-        screenShakeRef.current = 8;
-        const finalScore = scoreRef.current;
-        const highscore = Number(localStorage.getItem(`snake_hs_${activeMode}`) || '0');
-        const newHigh = Math.max(finalScore, highscore);
-        if (newHigh > highscore) {
-          localStorage.setItem(`snake_hs_${activeMode}`, newHigh.toString());
-        }
-        onGameOver(finalScore, newHigh, foodEatenCountRef.current);
+        handleSnakeCrash();
         return;
       }
     }
@@ -596,16 +654,7 @@ export default function GameBoard({
     // 2. Check Self Collision
     const collidedWithSelf = prevSnake.some((segment) => segment.x === nextHead.x && segment.y === nextHead.y);
     if (collidedWithSelf && activeEffectsRef.current.immortal <= 0) {
-      playCrashSound();
-      screenShakeRef.current = 8;
-      const finalScore = scoreRef.current;
-      const activeMode = gameModeRef.current;
-      const highscore = Number(localStorage.getItem(`snake_hs_${activeMode}`) || '0');
-      const newHigh = Math.max(finalScore, highscore);
-      if (newHigh > highscore) {
-        localStorage.setItem(`snake_hs_${activeMode}`, newHigh.toString());
-      }
-      onGameOver(finalScore, newHigh, foodEatenCountRef.current);
+      handleSnakeCrash();
       return;
     }
 
@@ -614,16 +663,7 @@ export default function GameBoard({
       (obs) => obs.x === nextHead.x && obs.y === nextHead.y
     );
     if (collidedWithObstacle && activeEffectsRef.current.immortal <= 0) {
-      playCrashSound();
-      screenShakeRef.current = 8;
-      const finalScore = scoreRef.current;
-      const activeMode = gameModeRef.current;
-      const highscore = Number(localStorage.getItem(`snake_hs_${activeMode}`) || '0');
-      const newHigh = Math.max(finalScore, highscore);
-      if (newHigh > highscore) {
-        localStorage.setItem(`snake_hs_${activeMode}`, newHigh.toString());
-      }
-      onGameOver(finalScore, newHigh, foodEatenCountRef.current);
+      handleSnakeCrash();
       return;
     }
 
@@ -2739,7 +2779,7 @@ export default function GameBoard({
           )}
 
           {/* LIZARD PAUSE OVERLAY - Transparent, elegant, showing ruka hua game */}
-          {isLizardPaused && (
+          {isLizardPaused && !showRespawnMenu && (
             <div className="absolute inset-0 bg-slate-950/15 flex flex-col items-center justify-center text-center p-4 z-20 select-none animate-fade-in">
               <div className="bg-slate-950/90 border-2 border-amber-400 px-6 py-4 rounded-2xl flex flex-col items-center shadow-[0_12px_24px_rgba(0,0,0,0.6)]">
                 <span className="text-3xl mb-1 animate-pulse">⏸️</span>
@@ -2749,6 +2789,59 @@ export default function GameBoard({
                 <p className="text-[9px] text-slate-300 font-bold mt-1 max-w-[180px]">
                   Tap center button to resume!
                 </p>
+              </div>
+            </div>
+          )}
+
+          {/* RESPAWN / RESTART OVERLAY */}
+          {showRespawnMenu && (
+            <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-sm flex flex-col items-center justify-center p-4 z-30 select-none animate-fade-in">
+              <div className="bg-slate-900/95 border-4 border-red-500 rounded-3xl p-5 max-w-sm w-full text-center shadow-[0_20px_50px_rgba(0,0,0,0.8)] relative">
+                
+                {/* Out effect */}
+                <span className="text-5xl animate-bounce block mb-2">🌋</span>
+                <h2 className="text-xl sm:text-2xl font-black text-red-500 uppercase tracking-wider mb-1">
+                  Achanak Out Ho Gye!
+                </h2>
+                <p className="text-[10px] text-slate-300 font-bold mb-5 uppercase tracking-tight">
+                  Snake Size: <span className="text-emerald-400 font-black">{snake.length}</span> | Score: <span className="text-violet-400 font-black">{score}</span>
+                </p>
+
+                {/* Option Buttons Row */}
+                <div className="grid grid-cols-2 gap-4">
+                  {/* Respawn Button (Diamond + Ad Tag) */}
+                  <button
+                    onClick={handleRespawnClick}
+                    className="group relative flex flex-col items-center justify-center p-4 bg-gradient-to-b from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 border-4 border-amber-600 rounded-2xl shadow-[0_4px_0_#D97706] active:translate-y-1 active:shadow-none transition-all cursor-pointer text-slate-950"
+                  >
+                    {/* AD Tag */}
+                    <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-rose-500 text-white font-black text-[7px] px-2 py-0.5 rounded-full border border-rose-600 shadow-md animate-pulse">
+                      AD
+                    </span>
+                    <Gem className="w-8 h-8 text-slate-950 group-hover:scale-110 transition-transform mb-1.5" />
+                    <span className="text-xs font-black uppercase tracking-wide">
+                      Respawn
+                    </span>
+                    <span className="text-[8px] font-bold text-amber-950 mt-0.5 leading-none">
+                      Yahi Se Shuru!
+                    </span>
+                  </button>
+
+                  {/* Restart Button (Arrow Circle) */}
+                  <button
+                    onClick={handleRestartClick}
+                    className="group flex flex-col items-center justify-center p-4 bg-gradient-to-b from-emerald-400 to-emerald-500 hover:from-emerald-300 hover:to-emerald-400 border-4 border-emerald-600 rounded-2xl shadow-[0_4px_0_#059669] active:translate-y-1 active:shadow-none transition-all cursor-pointer text-slate-950"
+                  >
+                    <RotateCcw className="w-8 h-8 text-slate-950 group-hover:rotate-180 transition-transform duration-500 mb-1.5" />
+                    <span className="text-xs font-black uppercase tracking-wide">
+                      Restart
+                    </span>
+                    <span className="text-[8px] font-bold text-emerald-950 mt-0.5 leading-none">
+                      Naya Game!
+                    </span>
+                  </button>
+                </div>
+
               </div>
             </div>
           )}
