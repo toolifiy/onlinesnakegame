@@ -114,7 +114,6 @@ export default function GameBoard({
   const particlesRef = useRef<Particle[]>([]);
   const floatingTextsRef = useRef<FloatingText[]>([]);
   const eatAnimationsRef = useRef<EatAnimation[]>([]);
-  const [screenShake, setScreenShake] = useState(0);
   const [comboCount, setComboCount] = useState(0);
   const [comboTimer, setComboTimer] = useState(0);
   const [foodEatenCount, setFoodEatenCount] = useState(0);
@@ -192,7 +191,7 @@ export default function GameBoard({
   const activeEffectsRef = useRef(activeEffects);
   const comboCountRef = useRef<number>(comboCount);
   const scoreRef = useRef<number>(score);
-  const screenShakeRef = useRef<number>(screenShake);
+  const screenShakeRef = useRef<number>(0);
   const gameModeRef = useRef<GameMode>(gameMode);
   const selectedSkinRef = useRef<Skin>(selectedSkin);
 
@@ -201,7 +200,6 @@ export default function GameBoard({
   useEffect(() => { activeEffectsRef.current = activeEffects; }, [activeEffects]);
   useEffect(() => { comboCountRef.current = comboCount; }, [comboCount]);
   useEffect(() => { scoreRef.current = score; }, [score]);
-  useEffect(() => { screenShakeRef.current = screenShake; }, [screenShake]);
   useEffect(() => { gameModeRef.current = gameMode; }, [gameMode]);
   useEffect(() => { selectedSkinRef.current = selectedSkin; }, [selectedSkin]);
 
@@ -583,7 +581,7 @@ export default function GameBoard({
       } else {
         // Level Mode: crash!
         playCrashSound();
-        setScreenShake(20);
+        screenShakeRef.current = 8;
         const finalScore = scoreRef.current;
         const highscore = Number(localStorage.getItem(`snake_hs_${activeMode}`) || '0');
         const newHigh = Math.max(finalScore, highscore);
@@ -599,7 +597,7 @@ export default function GameBoard({
     const collidedWithSelf = prevSnake.some((segment) => segment.x === nextHead.x && segment.y === nextHead.y);
     if (collidedWithSelf && activeEffectsRef.current.immortal <= 0) {
       playCrashSound();
-      setScreenShake(20);
+      screenShakeRef.current = 8;
       const finalScore = scoreRef.current;
       const activeMode = gameModeRef.current;
       const highscore = Number(localStorage.getItem(`snake_hs_${activeMode}`) || '0');
@@ -617,7 +615,7 @@ export default function GameBoard({
     );
     if (collidedWithObstacle && activeEffectsRef.current.immortal <= 0) {
       playCrashSound();
-      setScreenShake(20);
+      screenShakeRef.current = 8;
       const finalScore = scoreRef.current;
       const activeMode = gameModeRef.current;
       const highscore = Number(localStorage.getItem(`snake_hs_${activeMode}`) || '0');
@@ -701,9 +699,9 @@ export default function GameBoard({
         setBoosterEatenCount(prev => prev + 1); // Increment booster count!
         unlockAchievement('blue_magic');
         addFloatingText('BLUE MAGIC POTION! 🧪✨', currentFood.position.x, currentFood.position.y - 0.5, '#2563EB');
-        setScreenShake(8);
+        screenShakeRef.current = 4;
       } else if (currentFood.type === 'GOLDEN_STAR') {
-        setScreenShake(12);
+        screenShakeRef.current = 5;
         unlockAchievement('star_power');
         addFloatingText('Star Blast! ✨', currentFood.position.x, currentFood.position.y - 0.5, '#FACC15');
       } else if (currentFood.type === 'CHILI') {
@@ -720,17 +718,17 @@ export default function GameBoard({
         newSnake.push({ ...newSnake[newSnake.length - 1] });
         addFloatingText('FEAST TIME! 🍰', currentFood.position.x, currentFood.position.y - 0.5, '#FF007F');
       } else if (currentFood.type === 'WATERMELON') {
-        setScreenShake(14);
+        screenShakeRef.current = 6;
         createExplosion(currentFood.position.x, currentFood.position.y, '#22C55E', 25);
         createExplosion(currentFood.position.x, currentFood.position.y, '#EF4444', 15); // red juice!
         addFloatingText('GIANT WATERMELON SPLASH! 🍉💥', currentFood.position.x, currentFood.position.y - 0.5, '#22C55E');
       } else if (currentFood.type === 'DRAGON_FRUIT') {
-        setScreenShake(12);
+        screenShakeRef.current = 5;
         createExplosion(currentFood.position.x, currentFood.position.y, '#EC4899', 20);
         createExplosion(currentFood.position.x, currentFood.position.y, '#A855F7', 15); // mystical purple sparkles
         addFloatingText('MYSTICAL DRAGON BURST! 🐉✨', currentFood.position.x, currentFood.position.y - 0.5, '#EC4899');
       } else if (currentFood.type === 'COCONUT') {
-        setScreenShake(5);
+        screenShakeRef.current = 2.5;
         createExplosion(currentFood.position.x, currentFood.position.y, '#854D0E', 12); // brown wood splinters
         createExplosion(currentFood.position.x, currentFood.position.y, '#FFFFFF', 8); // white meat splinters
         addFloatingText('HARD NUT CRUNCH! 🥥🔨', currentFood.position.x, currentFood.position.y - 0.5, '#854D0E');
@@ -864,9 +862,6 @@ export default function GameBoard({
           }
           return prev - 1.5;
         });
-
-        // Decay screen shake smoothly
-        setScreenShake(prev => Math.max(0, prev - 2));
       }, 100);
     }
     return () => clearInterval(timerId);
@@ -898,6 +893,11 @@ export default function GameBoard({
       // Decay head eat mouth animation frames
       if (headEatAnimRef.current > 0) {
         headEatAnimRef.current -= 1;
+      }
+
+      // Decay screen shake smoothly on every frame (60 FPS) for buttery smooth decay!
+      if (screenShakeRef.current > 0) {
+        screenShakeRef.current = Math.max(0, screenShakeRef.current - 0.35);
       }
 
       // Core Game Speed calculations based on levels, gradual progression, & active effects
