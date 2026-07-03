@@ -1,0 +1,7 @@
+# Slinky Snake Adventures 2D Robots.txt
+# Optimized for high-speed indexing in 2026
+
+User-agent: *
+Allow: /
+
+Sitemap: https://slinkysnakeadventures2d.com/sitemap.xml

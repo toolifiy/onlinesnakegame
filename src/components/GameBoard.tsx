@@ -76,6 +76,18 @@ export default function GameBoard({
 }: GameBoardProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
+  // Detect PC/Desktop view vs Mobile view dynamically to mount/unmount and prevent any crossover leaks
+  const [isDesktop, setIsDesktop] = useState<boolean>(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsDesktop(window.innerWidth >= 768);
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   // Core game states
   const [snake, setSnake] = useState<Position[]>([
     { x: 10, y: 10 },
@@ -448,7 +460,30 @@ export default function GameBoard({
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       initAudio(); // Force audio resume on first key press
-      if (!isPlayingRef.current || isPausedRef.current) return;
+      if (!isPlayingRef.current) return;
+
+      // Escape, 'p', 'P', 'm', 'M' toggles Pause/Menu configurations
+      if (e.key === 'Escape' || e.key === 'p' || e.key === 'P' || e.key === 'm' || e.key === 'M') {
+        e.preventDefault();
+        playClickSound();
+        if (isPausedRef.current) {
+          handleMenuResume();
+        } else {
+          setIsPaused(true);
+        }
+        return;
+      }
+
+      // 'q', 'Q', 'Backspace' triggers Exit Confirmation Overlay
+      if (e.key === 'q' || e.key === 'Q' || e.key === 'Backspace') {
+        e.preventDefault();
+        playClickSound();
+        setIsPaused(true);
+        setShowExitConfirm(true);
+        return;
+      }
+
+      if (isPausedRef.current) return;
 
       const currentDir = directionRef.current;
       switch (e.key) {
@@ -1993,6 +2028,416 @@ export default function GameBoard({
     // Restore shake translate context
     ctx.restore();
   };
+
+  if (isDesktop) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full w-full max-h-[96vh] select-none text-slate-100 relative animate-fade-in">
+        {/* EXIT CONFIRMATION POPUP MODAL */}
+        {showExitConfirm && (
+          <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-4 z-50 animate-fade-in">
+            <div className="bg-slate-950 border-4 border-red-500 rounded-3xl p-6 sm:p-8 w-full max-w-sm shadow-[0_20px_50px_rgba(0,0,0,0.85)] text-center relative">
+              <div className="w-16 h-16 bg-red-500/10 border-2 border-red-500 rounded-full flex items-center justify-center mx-auto mb-4 animate-bounce">
+                <span className="text-3xl">🚪</span>
+              </div>
+              
+              <h3 className="text-xl font-black text-red-500 uppercase tracking-widest">
+                Exit Game?
+              </h3>
+              
+              <p className="text-xs text-slate-300 font-medium mt-2 mb-6 leading-relaxed">
+                Are you sure you want to quit? Your active session will be ended and current progress of <span className="font-bold text-amber-400">{score} PTS</span> will be lost.
+              </p>
+              
+              <div className="flex flex-col gap-3">
+                {/* CANCEL BUTTON */}
+                <button
+                  onClick={() => {
+                    playClickSound();
+                    setShowExitConfirm(false);
+                    setIsPaused(false);
+                  }}
+                  className="w-full py-2.5 bg-amber-400 hover:bg-amber-500 text-slate-950 font-black rounded-xl border-2 border-amber-600 shadow-[0_3px_0_#D97706] active:translate-y-0.5 transition-all text-xs uppercase cursor-pointer"
+                >
+                  🎮 Cancel & Keep Playing
+                </button>
+                
+                {/* CONFIRM EXIT BUTTON */}
+                <button
+                  onClick={() => {
+                    playClickSound();
+                    setShowExitConfirm(false);
+                    setIsPaused(false);
+                    resetGameAndBack();
+                  }}
+                  className="w-full py-2.5 bg-rose-600 hover:bg-rose-500 text-white font-black rounded-xl border-2 border-rose-800 shadow-[0_3px_0_#9F1239] active:translate-y-0.5 transition-all text-xs uppercase cursor-pointer"
+                >
+                  🚪 Yes, Exit to Menu
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+        
+        {/* MID-GAME OPTIONS OVERLAY MENU WHEN PAUSED */}
+        {isPaused && (
+          <div className="absolute inset-0 bg-slate-950/45 backdrop-blur-[1.5px] z-30 flex flex-col items-center justify-center p-4 sm:p-6 overflow-y-auto rounded-none animate-fade-in">
+            <div className="w-full max-w-sm bg-slate-950/95 border-2 border-amber-400/90 shadow-[0_24px_50px_rgba(0,0,0,0.8)] rounded-3xl p-5 flex flex-col max-h-[92vh] overflow-y-auto select-none relative">
+              {/* CLOSE BUTTON (X) IN TOP-RIGHT CORNER */}
+              <button
+                onClick={() => {
+                  playClickSound();
+                  handleMenuResume();
+                }}
+                className="absolute top-4 right-4 text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 w-8 h-8 rounded-full flex items-center justify-center transition-all cursor-pointer font-black text-sm z-40"
+                title="Close Menu"
+              >
+                ✕
+              </button>
+              <div className="w-full text-center">
+                <h3 className="text-xl sm:text-2xl font-black text-amber-400 tracking-tight uppercase">
+                  ⏸️ GAME PAUSED
+                </h3>
+                <p className="text-[10px] text-slate-400 font-bold mb-4">
+                  Change configurations on the fly!
+                </p>
+
+                <div className="space-y-3 max-w-sm mx-auto text-left text-white">
+                  {/* 1. SPEED SLIDER */}
+                  <div className="bg-slate-900 border border-slate-800 rounded-xl p-2.5">
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="text-[10px] sm:text-xs font-black text-slate-300">⚡ SNAKE SPEED:</span>
+                      <span className="text-[10px] sm:text-xs font-mono font-black text-violet-400">
+                        x{customSpeedMultiplier.toFixed(1)}
+                      </span>
+                    </div>
+                    <input
+                      type="range"
+                      min="0.4"
+                      max="2.2"
+                      step="0.1"
+                      value={customSpeedMultiplier}
+                      onChange={(e) => {
+                        playClickSound();
+                        setCustomSpeedMultiplier(parseFloat(e.target.value));
+                      }}
+                      className="w-full accent-violet-400 h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer"
+                    />
+                  </div>
+
+                  {/* 2. BOARD THEME COMBOS */}
+                  <div className="bg-slate-900 border border-slate-800 rounded-xl p-2.5">
+                    <span className="text-[10px] sm:text-xs font-black text-slate-300 block mb-1.5">
+                      🎨 BOARD BACKGROUND COMBOS:
+                    </span>
+                    <div className="grid grid-cols-3 gap-1.5">
+                      {BOARD_THEMES.map((theme) => {
+                        const isSel = boardTheme === theme.id;
+                        return (
+                          <button
+                            key={theme.id}
+                            onClick={() => {
+                              playClickSound();
+                              setBoardTheme(theme.id);
+                            }}
+                            className={`p-1.5 rounded-lg border flex items-center justify-between gap-1 cursor-pointer transition-all ${
+                              isSel
+                                ? 'bg-violet-950/40 border-violet-500 text-violet-300'
+                                : 'bg-slate-950 border-slate-800 text-slate-500 hover:border-slate-700'
+                            }`}
+                          >
+                            <span className="text-[9px] sm:text-[10px] font-bold truncate">{theme.name.split(' ')[0]}</span>
+                            <div className="flex -space-x-1 items-center flex-shrink-0">
+                              <div className="w-2.5 h-2.5 rounded-full border border-black/10" style={{ backgroundColor: theme.color1 }} />
+                              <div className="w-2.5 h-2.5 rounded-full border border-black/10" style={{ backgroundColor: theme.color2 }} />
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* 3. SOUND CONTROLS */}
+                  <div className="grid grid-cols-2 gap-2.5">
+                    <div className="bg-slate-900 border border-slate-800 rounded-xl p-2.5 flex justify-between items-center">
+                      <span className="text-[9px] sm:text-[10px] font-black text-slate-300">🔊 AUDIO:</span>
+                      <button
+                        onClick={handleToggleSound}
+                        className="px-2 py-0.5 bg-amber-400 hover:bg-amber-500 text-slate-950 text-[9px] sm:text-[10px] font-black rounded transition-all cursor-pointer"
+                      >
+                        {soundOn ? 'ON' : 'MUTED'}
+                      </button>
+                    </div>
+                    <div className="bg-slate-900 border border-slate-800 rounded-xl p-2.5">
+                      <div className="flex justify-between items-center mb-0.5">
+                        <span className="text-[9px] sm:text-[10px] font-black text-slate-300">VOL:</span>
+                        <span className="text-[9px] sm:text-[10px] font-mono text-amber-400 font-bold">
+                          {soundOn ? Math.round(volumeLevel * 100) : 0}%
+                        </span>
+                      </div>
+                      <input
+                        type="range"
+                        min="0"
+                        max="1"
+                        step="0.05"
+                        value={soundOn ? volumeLevel : 0}
+                        disabled={!soundOn}
+                        onChange={(e) => handleVolumeChange(parseFloat(e.target.value))}
+                        className="w-full accent-amber-400 h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer"
+                      />
+                    </div>
+                  </div>
+
+                  {/* 4. FRUITS CHECKLIST */}
+                  <div className="bg-slate-900 border border-slate-800 rounded-xl p-2.5">
+                    <span className="text-[10px] sm:text-xs font-black text-slate-300 block mb-1.5">
+                      🍎 ALLOWED FOOD SPAWNS:
+                    </span>
+                    <div className="grid grid-cols-2 gap-1.5 max-h-32 overflow-y-auto pr-1">
+                      {ALL_FOOD_TEMPLATES.map((fruit) => {
+                        const isTicked = allowedFruits[fruit.type] === true;
+                        return (
+                          <button
+                            key={fruit.type}
+                            onClick={() => {
+                              playClickSound();
+                              setAllowedFruits(fruit.type);
+                            }}
+                            className="flex justify-between items-center px-1.5 py-1 hover:bg-slate-800 rounded transition-all text-left cursor-pointer"
+                          >
+                            <div className="flex items-center gap-1">
+                              <span className="text-xs">{fruit.emoji}</span>
+                              <span className="text-[9px] sm:text-[10px] font-bold text-slate-300">{fruit.name}</span>
+                            </div>
+                            <div className={`w-3.5 h-3.5 rounded flex items-center justify-center border transition-all ${
+                              isTicked ? 'bg-emerald-500 border-emerald-600 text-white' : 'border-slate-700 bg-slate-950'
+                            }`}>
+                              {isTicked && (
+                                <svg className="w-2.5 h-2.5 stroke-current" fill="none" viewBox="0 0 24 24" strokeWidth="4">
+                                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                                </svg>
+                              )}
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* 5. SKINS SELECTION */}
+                  <div className="bg-slate-900 border border-slate-800 rounded-xl p-2.5">
+                    <span className="text-[10px] sm:text-xs font-black text-amber-400 block mb-1.5 uppercase text-center">
+                      🎭 Change Skin mid-game:
+                    </span>
+                    <div className="grid grid-cols-3 gap-1.5 max-h-24 overflow-y-auto p-1 bg-slate-950 rounded-lg">
+                      {SNAKE_SKINS.map((skin) => {
+                        const isSel = skin.id === selectedSkin.id;
+                        return (
+                          <button
+                            key={skin.id}
+                            onClick={() => { playClickSound(); onSelectSkin(skin); }}
+                            className={`p-1.5 rounded border flex items-center gap-2 text-left cursor-pointer transition-all ${
+                              isSel
+                                ? 'bg-amber-500/15 border-amber-400 text-amber-300'
+                                : 'bg-slate-900 border-slate-800 text-slate-500 hover:border-slate-700'
+                            }`}
+                          >
+                            <div className="flex-shrink-0 bg-slate-900/40 rounded-full p-0.5 border border-slate-800">
+                              <SnakeHeadPreview skin={skin} size={24} />
+                            </div>
+                            <span className="text-[8px] sm:text-[9px] font-black truncate">{skin.name.split(' ')[0]}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Action buttons */}
+                <div className="flex flex-col gap-2 w-full mt-4 max-w-sm mx-auto">
+                  <button
+                    onClick={() => { playClickSound(); handleMenuResume(); }}
+                    className="w-full py-2 bg-emerald-400 hover:bg-emerald-500 text-slate-950 font-black rounded-xl border-2 border-emerald-600 shadow-[0_3px_0_#059669] active:translate-y-0.5 transition-all text-xs uppercase cursor-pointer"
+                  >
+                    ▶ Resume Game
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      playClickSound();
+                      setCustomSpeedMultiplier(1.0);
+                      setBoardTheme('mint');
+                      const slinkySkin = SNAKE_SKINS.find(s => s.id === 'slinky');
+                      if (slinkySkin) {
+                        onSelectSkin(slinkySkin);
+                      }
+                    }}
+                    className="w-full py-2 bg-sky-500 hover:bg-sky-600 text-white font-black rounded-xl border-2 border-sky-700 shadow-[0_3px_0_#0369A1] active:translate-y-0.5 transition-all text-xs uppercase cursor-pointer"
+                  >
+                    ⚙️ Reset To Defaults
+                  </button>
+
+                  <button
+                    onClick={() => { playClickSound(); setIsPaused(false); resetGameAndBack(); }}
+                    className="w-full py-2 bg-red-500 hover:bg-red-600 text-white font-black rounded-xl border-2 border-red-700 shadow-[0_3px_0_#991B1B] active:translate-y-0.5 transition-all text-xs uppercase cursor-pointer"
+                  >
+                    🚪 Exit to Main Menu
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* TOP KEYS PANEL - exit wala aur manu wala keys screen ke upar */}
+        <div className="w-full max-w-[75vh] flex justify-between items-center bg-slate-950 border border-slate-800 text-slate-400 py-1.5 px-4 rounded-xl shadow-lg mb-2 select-none">
+          {/* MENU KEY */}
+          <button
+            onClick={() => {
+              playClickSound();
+              setIsPaused(!isPaused);
+            }}
+            className="flex items-center gap-1.5 px-3 py-1 bg-slate-900 border border-slate-800 hover:border-slate-700 hover:bg-slate-850 rounded-xl shadow-sm text-xs font-black text-amber-400 transition-all active:translate-y-0.5 cursor-pointer"
+          >
+            ⚙️ MENU <kbd className="bg-slate-800 text-slate-300 px-1.5 py-0.5 rounded text-[9px] font-mono font-bold border border-slate-700 ml-1.5">ESC</kbd>
+          </button>
+
+          <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest hidden sm:inline">
+            🖥️ DESKTOP ARCADE STATION
+          </span>
+
+          {/* EXIT KEY */}
+          <button
+            onClick={() => {
+              playClickSound();
+              setIsPaused(true);
+              setShowExitConfirm(true);
+            }}
+            className="flex items-center gap-1.5 px-3 py-1 bg-slate-900 border border-slate-800 hover:border-slate-700 hover:bg-slate-850 rounded-xl shadow-sm text-xs font-black text-rose-500 transition-all active:translate-y-0.5 cursor-pointer"
+          >
+            🚪 EXIT <kbd className="bg-slate-800 text-slate-300 px-1.5 py-0.5 rounded text-[9px] font-mono font-bold border border-slate-700 ml-1.5">Q</kbd>
+          </button>
+        </div>
+
+        {/* MAIN SCREEN BOX (Computer screen ke jitna aspect match) */}
+        <div className="w-full max-w-[75vh] aspect-square bg-slate-950 p-1.5 rounded-2xl border-4 border-slate-900 flex flex-col items-center shadow-2xl relative overflow-hidden">
+          
+          {/* ACTIVE EFFECTS HUD */}
+          <div className="absolute top-3 left-3 z-10 flex flex-col gap-1 pointer-events-none">
+            {activeEffects.chili > 0 && (
+              <div className="flex items-center gap-1 bg-amber-500/95 text-white text-[9px] px-2.5 py-0.5 rounded-full shadow-lg border border-amber-300 animate-bounce font-bold">
+                🔥 Speed Boost ({(activeEffects.chili / 1000).toFixed(1)}s)
+              </div>
+            )}
+            {activeEffects.grape > 0 && (
+              <div className="flex items-center gap-1 bg-purple-500/95 text-white text-[9px] px-2.5 py-0.5 rounded-full shadow-lg border border-purple-300 animate-pulse font-bold">
+                🍇 Chill Mode ({(activeEffects.grape / 1000).toFixed(1)}s)
+              </div>
+            )}
+            {activeEffects.booster > 0 && (
+              <div className="flex items-center gap-1 bg-blue-600/95 text-white text-[9px] px-2.5 py-0.5 rounded-full shadow-lg border border-blue-400 animate-bounce font-bold shadow-blue-500/20">
+                ⚡ Magic Booster ({(activeEffects.booster / 1000).toFixed(1)}s)
+              </div>
+            )}
+          </div>
+
+          <div className="w-full aspect-square overflow-hidden rounded-lg border border-slate-900 relative">
+            <canvas
+              ref={canvasRef}
+              width={800}
+              height={800}
+              className="cursor-none shadow-inner w-full h-full aspect-square bg-slate-950"
+            />
+
+            {comboCount > 1 && (
+              <span className="absolute top-2 right-16 text-[9px] sm:text-xs font-black text-pink-500 bg-pink-500/10 px-1.5 py-0.5 rounded border border-pink-500/20 animate-bounce z-20">
+                COMBO x{comboCount}!
+              </span>
+            )}
+
+            {isLizardPaused && (
+              <div className="absolute inset-0 bg-slate-950/15 flex flex-col items-center justify-center text-center p-4 z-20 select-none animate-fade-in">
+                <div className="bg-slate-950/95 border-2 border-amber-400 px-6 py-4 rounded-2xl flex flex-col items-center shadow-[0_12px_24px_rgba(0,0,0,0.6)]">
+                  <span className="text-3xl mb-1 animate-pulse">⏸️</span>
+                  <h3 className="text-base font-black text-amber-400 tracking-widest uppercase">
+                    GAME PAUSED
+                  </h3>
+                  <p className="text-[9px] text-slate-300 font-bold mt-1 max-w-[180px]">
+                    Press ESC to resume slithering!
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {countdown !== null && (
+              <div className="absolute inset-0 bg-slate-950/10 flex flex-col items-center justify-center text-center z-20 select-none animate-fade-in">
+                <div className="bg-slate-950/85 px-8 py-5 rounded-3xl border-2 border-amber-400/30 flex flex-col items-center justify-center shadow-2xl scale-110">
+                  <span className="text-6xl font-black text-amber-400 animate-ping">
+                    {countdown}
+                  </span>
+                  <p className="text-[10px] text-slate-300 font-extrabold tracking-widest mt-2 uppercase animate-pulse">
+                    GET READY!
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Scoreboard bezel */}
+          <div className="mt-2 flex justify-between w-full px-2 text-slate-300 font-mono text-[11px] select-none relative">
+            <div className="flex items-center gap-1">
+              <span className="text-slate-500 font-bold uppercase tracking-tight">SCORE:</span>
+              <span className="font-bold text-violet-400">
+                {score} PTS
+              </span>
+            </div>
+            
+            <div className="flex items-center gap-1 relative">
+              <span className="text-slate-500 font-bold uppercase tracking-tight">HIGHSCORE:</span>
+              <span className={`font-bold transition-all duration-300 ${
+                blastActive
+                  ? 'text-amber-400 scale-125 animate-pulse drop-shadow-[0_0_10px_rgba(251,191,36,0.95)]'
+                  : 'text-emerald-400'
+              }`}>
+                {highScore} PTS
+              </span>
+
+              {blastActive && (
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 pointer-events-none z-50">
+                  {blastSparks.map((spark) => (
+                    <span
+                      key={spark.id}
+                      className="absolute text-sm select-none animate-ping"
+                      style={{
+                        transform: `translate(${Math.cos(spark.angle) * 45}px, ${Math.sin(spark.angle) * 35}px) scale(1.6)`,
+                      }}
+                    >
+                      {spark.char}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* BOTTOM KEYS PANEL - controller wala screen ke miche likhna */}
+        <div className="w-full max-w-[75vh] bg-slate-950 border border-slate-800 text-slate-300 py-1.5 px-3 rounded-xl shadow-lg mt-2 flex justify-around items-center text-[10px] sm:text-[11px] font-bold">
+          <span className="flex items-center gap-1">
+            <kbd className="bg-slate-900 text-amber-400 border border-slate-800 px-1 py-0.2 rounded font-mono">W</kbd> / <kbd className="bg-slate-900 text-amber-400 border border-slate-800 px-1 py-0.2 rounded font-mono">↑</kbd> Go Up (ऊपर जाने के लिए)
+          </span>
+          <span className="flex items-center gap-1">
+            <kbd className="bg-slate-900 text-amber-400 border border-slate-800 px-1 py-0.2 rounded font-mono">S</kbd> / <kbd className="bg-slate-900 text-amber-400 border border-slate-800 px-1 py-0.2 rounded font-mono">↓</kbd> Go Down (नीचे जाने के लिए)
+          </span>
+          <span className="flex items-center gap-1">
+            <kbd className="bg-slate-900 text-amber-400 border border-slate-800 px-1 py-0.2 rounded font-mono">A</kbd> / <kbd className="bg-slate-900 text-amber-400 border border-slate-800 px-1 py-0.2 rounded font-mono">←</kbd> Go Left (बाएँ जाने के लिए)
+          </span>
+          <span className="flex items-center gap-1">
+            <kbd className="bg-slate-900 text-amber-400 border border-slate-800 px-1 py-0.2 rounded font-mono">D</kbd> / <kbd className="bg-slate-900 text-amber-400 border border-slate-800 px-1 py-0.2 rounded font-mono">→</kbd> Go Right (दाएँ जाने के लिए)
+          </span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col lg:flex-row items-center lg:items-stretch w-full max-w-[650px] lg:max-w-[1100px] bg-slate-200 dark:bg-slate-800 p-0.5 sm:p-1.5 lg:p-4 rounded-none border-4 border-amber-400 dark:border-amber-500 shadow-[0_24px_50px_rgba(0,0,0,0.35)] gap-1 lg:gap-6 mx-auto relative overflow-hidden">

@@ -449,74 +449,108 @@ export default function App() {
   // 1. Privacy Policy Page Render (Full Screen View)
   const renderPrivacyPage = () => {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-teal-50 via-amber-50 to-emerald-100 dark:from-slate-900 dark:via-indigo-950 dark:to-slate-950 font-sans p-4 md:p-8 transition-colors duration-300 flex items-center justify-center">
-        <div className="max-w-3xl w-full bg-white dark:bg-slate-800 border-4 border-violet-500 rounded-3xl p-6 md:p-10 shadow-2xl animate-fade-in relative my-4">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 border-b-4 border-violet-500 pb-4">
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 font-sans flex flex-col transition-colors duration-300">
+        {/* STANDALONE NAVBAR */}
+        <header className="sticky top-0 z-40 bg-white/85 dark:bg-slate-900/85 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-4 py-4.5 sm:px-6 md:px-8">
+          <div className="max-w-5xl mx-auto flex justify-between items-center">
             <div className="flex items-center gap-3">
-              <span className="text-4xl">🔒</span>
-              <div>
-                <h2 className="text-2xl md:text-3xl font-black text-slate-800 dark:text-white leading-tight">
-                  Privacy Policy
-                </h2>
-                <p className="text-xs text-slate-400 dark:text-slate-500 font-bold mt-1">Last Updated: June 30, 2026</p>
-              </div>
+              <span className="text-2xl">🐍</span>
+              <span className="font-black text-slate-800 dark:text-white tracking-tight text-sm sm:text-base">
+                Slinky Snake Adventures
+              </span>
             </div>
             <button
               onClick={() => { playClickSound(); setActivePage('HOME'); }}
-              className="px-4 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-white font-extrabold rounded-2xl border-2 border-slate-300 dark:border-slate-600 transition-all cursor-pointer active:scale-95 text-xs shadow-sm"
+              className="flex items-center gap-1.5 px-4 py-2 bg-emerald-400 hover:bg-emerald-500 text-slate-950 font-black rounded-xl border-2 border-emerald-600 shadow-[0_2px_0_#059669] transition-all active:translate-y-0.5 cursor-pointer text-xs uppercase"
             >
-              ⬅ Back to Game
+              ⬅ Back to Game Lobby
             </button>
           </div>
-          
-          <div className="text-sm text-slate-600 dark:text-slate-300 space-y-6 leading-relaxed font-sans max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar">
-            <p className="text-base font-semibold text-slate-700 dark:text-slate-200">
-              Welcome to Slinky Snake Adventures 2D. We hold your data privacy and security in the highest regard. Please read our simple and transparent Privacy Policy carefully:
+        </header>
+
+        {/* HERO BANNER SECTION */}
+        <div className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white py-12 px-6 text-center shadow-inner">
+          <div className="max-w-3xl mx-auto">
+            <div className="inline-flex items-center justify-center bg-white/10 backdrop-blur-md p-3 rounded-full border border-white/20 mb-4 animate-bounce">
+              <span className="text-3xl">🔒</span>
+            </div>
+            <h1 className="text-3xl sm:text-4xl font-black uppercase tracking-wider">Privacy Policy</h1>
+            <p className="text-sm text-emerald-100 mt-2 font-semibold">
+              Your 100% Client-Side Secure & Safe Arcade Playground
             </p>
-            <div className="bg-slate-50 dark:bg-slate-900/50 p-5 rounded-2xl border-2 border-slate-100 dark:border-slate-700/50">
-              <h4 className="font-extrabold text-base text-violet-600 dark:text-violet-400 mb-2">1. Zero Data Collection</h4>
-              <p>
-                This website runs entirely client-side. This means we do not collect any personal information about you, such as your name, email address, IP address, geographical location, or browser cookies, and we do not transmit any data to external cloud servers.
-              </p>
-            </div>
-            <div className="bg-slate-50 dark:bg-slate-900/50 p-5 rounded-2xl border-2 border-slate-100 dark:border-slate-700/50">
-              <h4 className="font-extrabold text-base text-violet-600 dark:text-violet-400 mb-2">2. LocalStorage Usage</h4>
-              <p>
-                To maintain game progress, we only use your browser's <strong className="text-violet-500">Local Storage</strong>. The following details are saved:
-              </p>
-              <ul className="list-disc list-inside ml-2 mt-2 space-y-1">
-                <li>Your highscore.</li>
-                <li>Your unlocked achievements.</li>
-                <li>Your preferred snake skin.</li>
-              </ul>
-              <p className="mt-2 text-xs text-slate-500">
-                This data remains on your computer or mobile device. If you clear your browser cache or cookies, this data will be reset.
-              </p>
-            </div>
-            <div className="bg-slate-50 dark:bg-slate-900/50 p-5 rounded-2xl border-2 border-slate-100 dark:border-slate-700/50">
-              <h4 className="font-extrabold text-base text-violet-600 dark:text-violet-400 mb-2">3. Third-Party Services</h4>
-              <p>
-                This website does not use any advertising networks, social media trackers, or external analytics tools like Google Analytics. This game is completely ad-free, safe, and a clean arcade experience.
-              </p>
-            </div>
-            <div className="bg-slate-50 dark:bg-slate-900/50 p-5 rounded-2xl border-2 border-slate-100 dark:border-slate-700/50">
-              <h4 className="font-extrabold text-base text-violet-600 dark:text-violet-400 mb-2">4. Children's Privacy</h4>
-              <p>
-                This game is completely safe for children of all age groups. We do not collect any information from children. You can let children play the game without any worries.
-              </p>
-            </div>
-            <p className="pt-4 border-t dark:border-slate-700 text-xs text-slate-400 text-center">
-              If you have any questions regarding this Privacy Policy, you can reach out to us using the "Contact Us" page.
+            <p className="text-[11px] text-emerald-200/80 mt-1 uppercase tracking-widest font-bold">
+              Last Updated: June 30, 2026
             </p>
           </div>
-          
-          <button
-            onClick={() => { playClickSound(); setActivePage('HOME'); }}
-            className="mt-8 w-full bg-violet-500 hover:bg-violet-600 text-white font-black py-4 px-6 rounded-2xl shadow-lg transition-all cursor-pointer hover:scale-[1.01] active:scale-95 text-center text-sm uppercase tracking-wider"
-          >
-            Understood & Return to Lobby
-          </button>
         </div>
+
+        {/* CONTENT COLUMN */}
+        <main className="flex-grow max-w-4xl w-full mx-auto px-4 py-8 sm:px-6 md:px-8">
+          <div className="bg-white dark:bg-slate-900 rounded-3xl border-2 border-slate-200 dark:border-slate-800 p-6 sm:p-10 shadow-lg text-sm text-slate-600 dark:text-slate-300 space-y-8 leading-relaxed font-sans">
+            <p className="text-base font-semibold text-slate-700 dark:text-slate-200">
+              Welcome to Slinky Snake Adventures 2D. We hold your data privacy and security in the absolute highest regard. Please read our simple and transparent Privacy Policy carefully:
+            </p>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="bg-slate-50 dark:bg-slate-900/40 p-5 sm:p-6 rounded-2xl border-2 border-slate-100 dark:border-slate-800/80">
+                <h3 className="font-extrabold text-base text-violet-600 dark:text-violet-400 mb-2.5 flex items-center gap-2">
+                  <span>🛡️</span> 1. Zero Data Collection
+                </h3>
+                <p>
+                  This website runs entirely client-side. This means we do not collect any personal information about you, such as your name, email address, IP address, geographical location, or browser cookies, and we do not transmit any data to external cloud servers.
+                </p>
+              </div>
+
+              <div className="bg-slate-50 dark:bg-slate-900/40 p-5 sm:p-6 rounded-2xl border-2 border-slate-100 dark:border-slate-800/80">
+                <h3 className="font-extrabold text-base text-violet-600 dark:text-violet-400 mb-2.5 flex items-center gap-2">
+                  <span>💾</span> 2. LocalStorage Usage
+                </h3>
+                <p>
+                  To maintain game progress, we only use your browser's <strong className="text-violet-500">Local Storage</strong>. The following details are saved:
+                </p>
+                <ul className="list-disc list-inside ml-2 mt-2 space-y-1.5 font-bold">
+                  <li>Your game highscore record.</li>
+                  <li>Your unlocked achievements.</li>
+                  <li>Your preferred snake skin selection.</li>
+                </ul>
+                <p className="mt-2.5 text-xs text-slate-400">
+                  This data remains exclusively on your device. Clearing your browser cache will reset these.
+                </p>
+              </div>
+
+              <div className="bg-slate-50 dark:bg-slate-900/40 p-5 sm:p-6 rounded-2xl border-2 border-slate-100 dark:border-slate-800/80">
+                <h3 className="font-extrabold text-base text-violet-600 dark:text-violet-400 mb-2.5 flex items-center gap-2">
+                  <span>🚫</span> 3. Third-Party Services
+                </h3>
+                <p>
+                  This website does not use any advertising networks, social media trackers, or external analytics tools like Google Analytics. This game is completely ad-free, safe, and a clean arcade experience.
+                </p>
+              </div>
+
+              <div className="bg-slate-50 dark:bg-slate-900/40 p-5 sm:p-6 rounded-2xl border-2 border-slate-100 dark:border-slate-800/80">
+                <h3 className="font-extrabold text-base text-violet-600 dark:text-violet-400 mb-2.5 flex items-center gap-2">
+                  <span>👶</span> 4. Children's Privacy
+                </h3>
+                <p>
+                  This game is completely safe for children of all age groups. We do not collect any information from children. You can let children play the game without any worries.
+                </p>
+              </div>
+            </div>
+
+            <div className="pt-6 border-t dark:border-slate-800 text-xs text-slate-400 text-center">
+              If you have any questions regarding this Privacy Policy, you can reach out to us using the "Contact Us" page.
+            </div>
+
+            <div className="flex justify-center pt-2">
+              <button
+                onClick={() => { playClickSound(); setActivePage('HOME'); }}
+                className="px-8 py-3.5 bg-violet-500 hover:bg-violet-600 text-white font-black rounded-2xl shadow-lg transition-all cursor-pointer hover:scale-[1.01] active:scale-95 text-xs uppercase tracking-wider"
+              >
+                Understood & Return to Lobby
+              </button>
+            </div>
+          </div>
+        </main>
       </div>
     );
   };
@@ -524,63 +558,100 @@ export default function App() {
   // 2. Terms of Use Page Render (Full Screen View)
   const renderTermsPage = () => {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-teal-50 via-amber-50 to-emerald-100 dark:from-slate-900 dark:via-indigo-950 dark:to-slate-950 font-sans p-4 md:p-8 transition-colors duration-300 flex items-center justify-center">
-        <div className="max-w-3xl w-full bg-white dark:bg-slate-800 border-4 border-violet-500 rounded-3xl p-6 md:p-10 shadow-2xl animate-fade-in relative my-4">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 border-b-4 border-violet-500 pb-4">
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 font-sans flex flex-col transition-colors duration-300">
+        {/* STANDALONE NAVBAR */}
+        <header className="sticky top-0 z-40 bg-white/85 dark:bg-slate-900/85 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-4 py-4.5 sm:px-6 md:px-8">
+          <div className="max-w-5xl mx-auto flex justify-between items-center">
             <div className="flex items-center gap-3">
-              <span className="text-4xl">📜</span>
-              <div>
-                <h2 className="text-2xl md:text-3xl font-black text-slate-800 dark:text-white leading-tight">
-                  Terms of Use
-                </h2>
-                <p className="text-xs text-slate-400 dark:text-slate-500 font-bold mt-1">Last Updated: June 30, 2026</p>
-              </div>
+              <span className="text-2xl">🐍</span>
+              <span className="font-black text-slate-800 dark:text-white tracking-tight text-sm sm:text-base">
+                Slinky Snake Adventures
+              </span>
             </div>
             <button
               onClick={() => { playClickSound(); setActivePage('HOME'); }}
-              className="px-4 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-white font-extrabold rounded-2xl border-2 border-slate-300 dark:border-slate-600 transition-all cursor-pointer active:scale-95 text-xs shadow-sm"
+              className="flex items-center gap-1.5 px-4 py-2 bg-emerald-400 hover:bg-emerald-500 text-slate-950 font-black rounded-xl border-2 border-emerald-600 shadow-[0_2px_0_#059669] transition-all active:translate-y-0.5 cursor-pointer text-xs uppercase"
             >
-              ⬅ Back to Game
+              ⬅ Back to Game Lobby
             </button>
           </div>
-          
-          <div className="text-sm text-slate-600 dark:text-slate-300 space-y-6 leading-relaxed font-sans max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar">
-            <p className="text-base font-semibold text-slate-700 dark:text-slate-200">
-              By using the Slinky Snake Adventures 2D website, you agree to comply with the following terms and conditions. Please read them carefully:
+        </header>
+
+        {/* HERO BANNER SECTION */}
+        <div className="bg-gradient-to-r from-amber-500 to-orange-600 text-white py-12 px-6 text-center shadow-inner">
+          <div className="max-w-3xl mx-auto">
+            <div className="inline-flex items-center justify-center bg-white/10 backdrop-blur-md p-3 rounded-full border border-white/20 mb-4 animate-bounce">
+              <span className="text-3xl">📜</span>
+            </div>
+            <h1 className="text-3xl sm:text-4xl font-black uppercase tracking-wider">Terms of Use</h1>
+            <p className="text-sm text-amber-100 mt-2 font-semibold">
+              Rules and Agreements for Your Enjoyable Gaming Experience
             </p>
-            <div className="bg-slate-50 dark:bg-slate-900/50 p-5 rounded-2xl border-2 border-slate-100 dark:border-slate-700/50">
-              <h4 className="font-extrabold text-base text-violet-600 dark:text-violet-400 mb-2">1. Acceptable Use</h4>
-              <p>
-                This website is provided solely for your personal entertainment and enjoyment. You may not use this game for any commercial purposes. You are not required to pay any fee to play the game; it is 100% free.
-              </p>
+            <p className="text-[11px] text-amber-200/80 mt-1 uppercase tracking-widest font-bold">
+              Last Updated: June 30, 2026
+            </p>
+          </div>
+        </div>
+
+        {/* CONTENT COLUMN */}
+        <main className="flex-grow max-w-4xl w-full mx-auto px-4 py-8 sm:px-6 md:px-8">
+          <div className="bg-white dark:bg-slate-900 rounded-3xl border-2 border-slate-200 dark:border-slate-800 p-6 sm:p-10 shadow-lg text-sm text-slate-600 dark:text-slate-300 space-y-8 leading-relaxed font-sans">
+            <p className="text-base font-semibold text-slate-700 dark:text-slate-200">
+              By using the Slinky Snake Adventures 2D website, you agree to comply with and be bound by the following terms and conditions. Please read them carefully:
+            </p>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="bg-slate-50 dark:bg-slate-900/40 p-5 sm:p-6 rounded-2xl border-2 border-slate-100 dark:border-slate-800/80">
+                <h3 className="font-extrabold text-base text-violet-600 dark:text-violet-400 mb-2.5 flex items-center gap-2">
+                  <span>🕹️</span> 1. Acceptable Use
+                </h3>
+                <p>
+                  This website is provided solely for your personal entertainment and enjoyment. You may not use this game for any commercial purposes. You are not required to pay any fee to play the game; it is 100% free and open to play.
+                </p>
+              </div>
+
+              <div className="bg-slate-50 dark:bg-slate-900/40 p-5 sm:p-6 rounded-2xl border-2 border-slate-100 dark:border-slate-800/80">
+                <h3 className="font-extrabold text-base text-violet-600 dark:text-violet-400 mb-2.5 flex items-center gap-2">
+                  <span>🤝</span> 2. Fair Play Policy
+                </h3>
+                <p>
+                  We encourage players to enjoy the game exactly as it is designed. Manipulating LocalStorage via the browser developer console, artificially inflating scores, or unlocking achievements via scripts reduces the true thrill of the game. Play fair and set honest records!
+                </p>
+              </div>
+
+              <div className="bg-slate-50 dark:bg-slate-900/40 p-5 sm:p-6 rounded-2xl border-2 border-slate-100 dark:border-slate-800/80">
+                <h3 className="font-extrabold text-base text-violet-600 dark:text-violet-400 mb-2.5 flex items-center gap-2">
+                  <span>🎨</span> 3. Intellectual Property
+                </h3>
+                <p>
+                  All source code, canvas drawing logic, gradient skins design, customized fruit explosion animations, and audio synthesizer code of this game are protected by intellectual property laws. You cannot copy, re-brand, or commercially redistribute this code without written permission.
+                </p>
+              </div>
+
+              <div className="bg-slate-50 dark:bg-slate-900/40 p-5 sm:p-6 rounded-2xl border-2 border-slate-100 dark:border-slate-800/80">
+                <h3 className="font-extrabold text-base text-violet-600 dark:text-violet-400 mb-2.5 flex items-center gap-2">
+                  <span>⚖️</span> 4. Limitation of Liability
+                </h3>
+                <p>
+                  This game is provided on an "AS IS" basis. We assume no responsibility for any technical issues, browser crashes, or deletion of LocalStorage data. The sound effects generated during gameplay are generated via your computer's sound card and browser, which are completely safe.
+                </p>
+              </div>
             </div>
-            <div className="bg-slate-50 dark:bg-slate-900/50 p-5 rounded-2xl border-2 border-slate-100 dark:border-slate-700/50">
-              <h4 className="font-extrabold text-base text-violet-600 dark:text-violet-400 mb-2">2. Fair Play Policy</h4>
-              <p>
-                We encourage players to enjoy the game exactly as it is designed. Manipulating LocalStorage via the browser developer console, artificially inflating scores, or unlocking achievements via scripts reduces the true thrill of the game. Play fair and set honest records!
-              </p>
+
+            <div className="pt-6 border-t dark:border-slate-800 text-xs text-slate-400 text-center">
+              Please respect our Terms of Use to ensure the arcade gaming community remains fair and competitive.
             </div>
-            <div className="bg-slate-50 dark:bg-slate-900/50 p-5 rounded-2xl border-2 border-slate-100 dark:border-slate-700/50">
-              <h4 className="font-extrabold text-base text-violet-600 dark:text-violet-400 mb-2">3. Intellectual Property</h4>
-              <p>
-                All source code, canvas drawing logic, gradient skins design, customized fruit explosion animations, and audio synthesizer code of this game are protected by intellectual property laws. You cannot copy, re-brand, or commercially redistribute this code without written permission.
-              </p>
-            </div>
-            <div className="bg-slate-50 dark:bg-slate-900/50 p-5 rounded-2xl border-2 border-slate-100 dark:border-slate-700/50">
-              <h4 className="font-extrabold text-base text-violet-600 dark:text-violet-400 mb-2">4. Limitation of Liability</h4>
-              <p>
-                This game is provided on an "AS IS" basis. We assume no responsibility for any technical issues, browser crashes, or deletion of LocalStorage data. The sound effects generated during gameplay are generated via your computer's sound card and browser, which are completely safe.
-              </p>
+
+            <div className="flex justify-center pt-2">
+              <button
+                onClick={() => { playClickSound(); setActivePage('HOME'); }}
+                className="px-8 py-3.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-black rounded-2xl shadow-lg transition-all cursor-pointer hover:scale-[1.01] active:scale-95 text-xs uppercase tracking-wider"
+              >
+                I Agree & Return to Lobby
+              </button>
             </div>
           </div>
-          
-          <button
-            onClick={() => { playClickSound(); setActivePage('HOME'); }}
-            className="mt-8 w-full bg-violet-500 hover:bg-violet-600 text-white font-black py-4 px-6 rounded-2xl shadow-lg transition-all cursor-pointer hover:scale-[1.01] active:scale-95 text-center text-sm uppercase tracking-wider"
-          >
-            I Agree & Return to Lobby
-          </button>
-        </div>
+        </main>
       </div>
     );
   };
@@ -588,140 +659,196 @@ export default function App() {
   // 3. Contact Us Page Render (Full Screen View)
   const renderContactPage = () => {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-teal-50 via-amber-50 to-emerald-100 dark:from-slate-900 dark:via-indigo-950 dark:to-slate-950 font-sans p-4 md:p-8 transition-colors duration-300 flex items-center justify-center">
-        <div className="max-w-2xl w-full bg-white dark:bg-slate-800 border-4 border-violet-500 rounded-3xl p-6 md:p-10 shadow-2xl animate-fade-in relative my-4">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 border-b-4 border-violet-500 pb-4">
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 font-sans flex flex-col transition-colors duration-300">
+        {/* STANDALONE NAVBAR */}
+        <header className="sticky top-0 z-40 bg-white/85 dark:bg-slate-900/85 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-4 py-4.5 sm:px-6 md:px-8">
+          <div className="max-w-5xl mx-auto flex justify-between items-center">
             <div className="flex items-center gap-3">
-              <span className="text-4xl">✉️</span>
-              <div>
-                <h2 className="text-2xl md:text-3xl font-black text-slate-800 dark:text-white leading-tight">
-                  Contact Us
-                </h2>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 font-bold">
-                  Your feedback and suggestions help us improve Slinky Snake!
-                </p>
-              </div>
+              <span className="text-2xl">🐍</span>
+              <span className="font-black text-slate-800 dark:text-white tracking-tight text-sm sm:text-base">
+                Slinky Snake Adventures
+              </span>
             </div>
             <button
               onClick={() => { playClickSound(); setActivePage('HOME'); }}
-              className="px-4 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-white font-extrabold rounded-2xl border-2 border-slate-300 dark:border-slate-600 transition-all cursor-pointer active:scale-95 text-xs shadow-sm"
+              className="flex items-center gap-1.5 px-4 py-2 bg-emerald-400 hover:bg-emerald-500 text-slate-950 font-black rounded-xl border-2 border-emerald-600 shadow-[0_2px_0_#059669] transition-all active:translate-y-0.5 cursor-pointer text-xs uppercase"
             >
-              ⬅ Back to Game
+              ⬅ Back to Game Lobby
             </button>
           </div>
-          
-          {contactSubmitted ? (
-            <div className="bg-emerald-50 dark:bg-emerald-950/20 border-4 border-emerald-400 p-8 rounded-3xl text-center flex flex-col items-center justify-center py-12 animate-scale-up">
-              <span className="text-6xl mb-4">🎉</span>
-              <h3 className="text-emerald-700 dark:text-emerald-400 font-extrabold text-2xl mb-2">
-                Message Sent Successfully!
-              </h3>
-              <p className="text-sm text-slate-600 dark:text-slate-300 max-w-md leading-relaxed">
-                Hi <span className="font-black text-violet-500">{contactName}</span>, your message has been received. We are incredibly grateful for your valuable feedback!
-              </p>
-              <div className="flex flex-col sm:flex-row gap-3 w-full mt-8">
-                <button
-                  onClick={() => {
-                    playClickSound();
-                    setContactSubmitted(false);
-                    setContactName('');
-                    setContactEmail('');
-                    setContactSubject('');
-                    setContactMessage('');
-                  }}
-                  className="flex-1 bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3.5 px-6 rounded-2xl text-xs cursor-pointer transition-all active:scale-95 shadow-md uppercase tracking-wider"
-                >
-                  Write New Message
-                </button>
-                <button
-                  onClick={() => {
-                    playClickSound();
-                    setActivePage('HOME');
-                  }}
-                  className="flex-1 bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-white font-bold py-3.5 px-6 rounded-2xl text-xs cursor-pointer transition-all active:scale-95 shadow-md uppercase tracking-wider"
-                >
-                  Return to Lobby
-                </button>
-              </div>
+        </header>
+
+        {/* HERO BANNER SECTION */}
+        <div className="bg-gradient-to-r from-violet-500 to-fuchsia-600 text-white py-12 px-6 text-center shadow-inner">
+          <div className="max-w-3xl mx-auto">
+            <div className="inline-flex items-center justify-center bg-white/10 backdrop-blur-md p-3 rounded-full border border-white/20 mb-4 animate-bounce">
+              <span className="text-3xl">✉️</span>
             </div>
-          ) : (
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                if (!contactName.trim() || !contactEmail.trim() || !contactMessage.trim()) {
-                  alert('Please fill in all required fields.');
-                  return;
-                }
-                playClickSound();
-                setContactSubmitted(true);
-              }}
-              className="space-y-4 font-sans text-sm text-slate-700 dark:text-slate-300"
-            >
-              <div>
-                <label className="block font-black mb-1.5">Your Name (Full Name) <span className="text-rose-500">*</span></label>
-                <input
-                  type="text"
-                  required
-                  value={contactName}
-                  onChange={(e) => setContactName(e.target.value)}
-                  placeholder="Sameer Choudhary"
-                  className="w-full h-11 px-4 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 focus:border-violet-400 focus:outline-none dark:text-white"
-                />
-              </div>
-
-              <div>
-                <label className="block font-black mb-1.5">Email Address <span className="text-rose-500">*</span></label>
-                <input
-                  type="email"
-                  required
-                  value={contactEmail}
-                  onChange={(e) => setContactEmail(e.target.value)}
-                  placeholder="sameer@example.com"
-                  className="w-full h-11 px-4 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 focus:border-violet-400 focus:outline-none dark:text-white"
-                />
-              </div>
-
-              <div>
-                <label className="block font-black mb-1.5">Subject</label>
-                <input
-                  type="text"
-                  value={contactSubject}
-                  onChange={(e) => setContactSubject(e.target.value)}
-                  placeholder="Gameplay feedback / new suggestion"
-                  className="w-full h-11 px-4 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 focus:border-violet-400 focus:outline-none dark:text-white"
-                />
-              </div>
-
-              <div>
-                <label className="block font-black mb-1.5">Your Message <span className="text-rose-500">*</span></label>
-                <textarea
-                  required
-                  rows={5}
-                  value={contactMessage}
-                  onChange={(e) => setContactMessage(e.target.value)}
-                  placeholder="Write your message here..."
-                  className="w-full p-4 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 focus:border-violet-400 focus:outline-none dark:text-white resize-none"
-                ></textarea>
-              </div>
-
-              <div className="flex gap-3 pt-4">
-                <button
-                  type="button"
-                  onClick={() => { playClickSound(); setActivePage('HOME'); }}
-                  className="flex-1 h-12 bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-white font-extrabold rounded-xl transition-all cursor-pointer active:scale-95 text-xs uppercase tracking-wider"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="flex-1 h-12 bg-violet-500 hover:bg-violet-600 text-white font-extrabold rounded-xl shadow-lg transition-all cursor-pointer hover:scale-[1.02] active:scale-95 text-xs uppercase tracking-wider"
-                >
-                  Send Message
-                </button>
-              </div>
-            </form>
-          )}
+            <h1 className="text-3xl sm:text-4xl font-black uppercase tracking-wider">Contact Us</h1>
+            <p className="text-sm text-violet-100 mt-2 font-semibold">
+              Have questions, feedback, or a new feature request? We would love to hear from you!
+            </p>
+          </div>
         </div>
+
+        {/* CONTENT COLUMN */}
+        <main className="flex-grow max-w-5xl w-full mx-auto px-4 py-8 sm:px-6 md:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
+            
+            {/* INSTAGRAM & SOCIAL CHANNEL CARD (4 cols) */}
+            <div className="md:col-span-5 bg-white dark:bg-slate-900 rounded-3xl border-2 border-slate-200 dark:border-slate-800 p-6 sm:p-8 shadow-lg flex flex-col items-center text-center">
+              <span className="text-5xl mb-4">📸</span>
+              <h2 className="text-xl font-black text-slate-800 dark:text-white mb-2">Connect via Instagram</h2>
+              <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed mb-6 max-w-xs">
+                For the absolute fastest response and direct interactive feedback, send us a direct message on Instagram! Click the button below to visit our profile.
+              </p>
+              
+              <a
+                href="https://www.instagram.com/toolifiy?igsh=MTJkY3ZmbnhnM2kyNg=="
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => playClickSound()}
+                className="w-full inline-flex items-center justify-center gap-2.5 py-4 px-6 rounded-2xl text-white font-black text-xs uppercase tracking-wider bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 shadow-lg hover:scale-[1.03] active:scale-95 transition-all duration-200 cursor-pointer"
+              >
+                {/* Custom Instagram-like aesthetic icon inside SVG */}
+                <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
+                </svg>
+                DM on Instagram
+              </a>
+
+              <div className="w-full flex items-center justify-between my-4">
+                <hr className="w-full border-slate-200 dark:border-slate-800" />
+                <span className="text-[10px] font-black text-slate-400 dark:text-slate-500 px-3 uppercase tracking-widest">OR</span>
+                <hr className="w-full border-slate-200 dark:border-slate-800" />
+              </div>
+
+              <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
+                Instagram handle: <span className="text-violet-500 select-all">@toolifiy</span>
+              </span>
+            </div>
+
+            {/* MESSAGE EMAIL FORM (8 cols) */}
+            <div className="md:col-span-7 bg-white dark:bg-slate-900 rounded-3xl border-2 border-slate-200 dark:border-slate-800 p-6 sm:p-8 shadow-lg">
+              {contactSubmitted ? (
+                <div className="bg-emerald-50 dark:bg-emerald-950/20 border-4 border-emerald-400 p-6 rounded-2xl text-center flex flex-col items-center justify-center py-10 animate-scale-up">
+                  <span className="text-5xl mb-4">🎉</span>
+                  <h3 className="text-emerald-700 dark:text-emerald-400 font-extrabold text-xl mb-2">
+                    Message Sent Successfully!
+                  </h3>
+                  <p className="text-xs text-slate-600 dark:text-slate-300 max-w-md leading-relaxed">
+                    Hi <span className="font-black text-violet-500">{contactName}</span>, your message has been received. We are incredibly grateful for your valuable feedback!
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-3 w-full mt-6">
+                    <button
+                      onClick={() => {
+                        playClickSound();
+                        setContactSubmitted(false);
+                        setContactName('');
+                        setContactEmail('');
+                        setContactSubject('');
+                        setContactMessage('');
+                      }}
+                      className="flex-1 bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-4 rounded-xl text-xs cursor-pointer transition-all active:scale-95 shadow-md uppercase tracking-wider"
+                    >
+                      New Message
+                    </button>
+                    <button
+                      onClick={() => {
+                        playClickSound();
+                        setActivePage('HOME');
+                      }}
+                      className="flex-1 bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-white font-bold py-3 px-4 rounded-xl text-xs cursor-pointer transition-all active:scale-95 shadow-md uppercase tracking-wider"
+                    >
+                      Return to Lobby
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    if (!contactName.trim() || !contactEmail.trim() || !contactMessage.trim()) {
+                      alert('Please fill in all required fields.');
+                      return;
+                    }
+                    playClickSound();
+                    setContactSubmitted(true);
+                  }}
+                  className="space-y-4 text-xs text-slate-700 dark:text-slate-300"
+                >
+                  <h3 className="text-base font-black text-slate-800 dark:text-white border-b-2 border-violet-100 dark:border-slate-800 pb-2.5 mb-2 flex items-center gap-2">
+                    <span>📩</span> Send Us an Email Message
+                  </h3>
+
+                  <div>
+                    <label className="block font-black mb-1.5 uppercase tracking-wider">Your Name <span className="text-rose-500">*</span></label>
+                    <input
+                      type="text"
+                      required
+                      value={contactName}
+                      onChange={(e) => setContactName(e.target.value)}
+                      placeholder="Sameer Choudhary"
+                      className="w-full h-11 px-4 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 focus:border-violet-400 focus:outline-none dark:text-white text-xs"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-black mb-1.5 uppercase tracking-wider">Email Address <span className="text-rose-500">*</span></label>
+                    <input
+                      type="email"
+                      required
+                      value={contactEmail}
+                      onChange={(e) => setContactEmail(e.target.value)}
+                      placeholder="sameer@example.com"
+                      className="w-full h-11 px-4 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 focus:border-violet-400 focus:outline-none dark:text-white text-xs"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-black mb-1.5 uppercase tracking-wider">Subject</label>
+                    <input
+                      type="text"
+                      value={contactSubject}
+                      onChange={(e) => setContactSubject(e.target.value)}
+                      placeholder="Gameplay feedback / new suggestion"
+                      className="w-full h-11 px-4 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 focus:border-violet-400 focus:outline-none dark:text-white text-xs"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-black mb-1.5 uppercase tracking-wider">Your Message <span className="text-rose-500">*</span></label>
+                    <textarea
+                      required
+                      rows={4}
+                      value={contactMessage}
+                      onChange={(e) => setContactMessage(e.target.value)}
+                      placeholder="Write your suggestions or report any bug here..."
+                      className="w-full p-4 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 focus:border-violet-400 focus:outline-none dark:text-white text-xs resize-none"
+                    ></textarea>
+                  </div>
+
+                  <div className="flex gap-3 pt-2">
+                    <button
+                      type="button"
+                      onClick={() => { playClickSound(); setActivePage('HOME'); }}
+                      className="flex-1 h-12 bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-white font-extrabold rounded-xl transition-all cursor-pointer active:scale-95 uppercase tracking-wider"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      className="flex-1 h-12 bg-violet-500 hover:bg-violet-600 text-white font-extrabold rounded-xl shadow-lg transition-all cursor-pointer hover:scale-[1.02] active:scale-95 uppercase tracking-wider"
+                    >
+                      Send Message
+                    </button>
+                  </div>
+                </form>
+              )}
+            </div>
+
+          </div>
+        </main>
       </div>
     );
   };
