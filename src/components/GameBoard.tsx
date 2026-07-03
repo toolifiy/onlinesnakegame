@@ -109,7 +109,6 @@ export default function GameBoard({
   const foodEatenCountRef = useRef<number>(foodEatenCount);
   const [boosterEatenCount, setBoosterEatenCount] = useState(0);
   const boosterEatenCountRef = useRef<number>(0);
-
   // High score explosion / blast animation states
   const [hasBrokenRecord, setHasBrokenRecord] = useState(false);
   const [blastActive, setBlastActive] = useState(false);
@@ -1995,12 +1994,23 @@ export default function GameBoard({
   };
 
   return (
-    <div className="flex flex-col lg:flex-row items-stretch w-full h-[100dvh] lg:h-auto lg:max-h-[95vh] max-w-none lg:max-w-[1100px] bg-slate-900 lg:bg-slate-200 lg:dark:bg-slate-800 p-0 lg:p-4 rounded-none lg:rounded-3xl border-4 border-amber-400 dark:border-amber-500 shadow-[0_24px_50px_rgba(0,0,0,0.35)] gap-0 lg:gap-6 mx-auto relative overflow-hidden select-none">
+    <div className="flex flex-col lg:flex-row items-center lg:items-stretch w-full max-w-[650px] lg:max-w-[1100px] bg-slate-200 dark:bg-slate-800 p-0.5 sm:p-1.5 lg:p-4 rounded-none border-4 border-amber-400 dark:border-amber-500 shadow-[0_24px_50px_rgba(0,0,0,0.35)] gap-1 lg:gap-6 mx-auto relative overflow-hidden">
       
       {/* MID-GAME OPTIONS OVERLAY MENU WHEN PAUSED - Now full translucent floating card styled! */}
       {isPaused && (
         <div className="absolute inset-0 bg-slate-950/45 backdrop-blur-[1.5px] z-30 flex flex-col items-center justify-center p-4 sm:p-6 overflow-y-auto rounded-none animate-fade-in">
-          <div className="w-full max-w-sm bg-slate-950/95 border-2 border-amber-400/90 shadow-[0_24px_50px_rgba(0,0,0,0.8)] rounded-3xl p-5 flex flex-col max-h-[92vh] overflow-y-auto select-none">
+          <div className="w-full max-w-sm bg-slate-950/95 border-2 border-amber-400/90 shadow-[0_24px_50px_rgba(0,0,0,0.8)] rounded-3xl p-5 flex flex-col max-h-[92vh] overflow-y-auto select-none relative">
+            {/* CLOSE BUTTON (X) IN TOP-RIGHT CORNER */}
+            <button
+              onClick={() => {
+                playClickSound();
+                handleMenuResume();
+              }}
+              className="absolute top-4 right-4 text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 w-8 h-8 rounded-full flex items-center justify-center transition-all cursor-pointer font-black text-sm z-40"
+              title="Close Menu"
+            >
+              ✕
+            </button>
             <div className="w-full text-center">
               <h3 className="text-xl sm:text-2xl font-black text-amber-400 tracking-tight uppercase">
                 ⏸️ GAME PAUSED
@@ -2197,136 +2207,135 @@ export default function GameBoard({
       )}
 
       {/* LEFT PANEL: Header and Screen Section - Optimized screen width (65%) for beautiful large PC viewports */}
-      <div className="w-full lg:w-[65%] flex flex-col items-center gap-0 lg:gap-2">
+      <div className="w-full lg:w-[65%] flex flex-col items-center gap-1 lg:gap-2">
 
-        {/* 1. Sleek Arcade Top Header Marquee */}
-        <div className="w-full flex justify-between items-center px-4 py-2.5 bg-slate-900 border-b-2 border-slate-950 select-none">
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_#10B981]" />
-            <span className="text-[11px] sm:text-xs font-black text-slate-300 tracking-wider">★ SLINKY ARCADE ★</span>
-          </div>
+      {/* 1. Screen Section (Unified dark arcade bezel) - Sharp corners with no wasted padding */}
+      <div className="w-full bg-slate-950 p-0.5 sm:p-1 rounded-none border-4 border-slate-900 flex flex-col items-center shadow-inner relative overflow-hidden">
+        
+        {/* ACTIVE SCREEN EFFECTS INDICATOR */}
+        <div className="absolute top-2 left-2 z-10 flex flex-col gap-1 pointer-events-none">
+          {activeEffects.chili > 0 && (
+            <div className="flex items-center gap-1 bg-amber-500/95 text-white text-[9px] px-2 py-0.5 rounded-full shadow-lg border border-amber-300 animate-bounce font-bold">
+              🔥 Speed Boost ({(activeEffects.chili / 1000).toFixed(1)}s)
+            </div>
+          )}
+          {activeEffects.grape > 0 && (
+            <div className="flex items-center gap-1 bg-purple-500/95 text-white text-[9px] px-2 py-0.5 rounded-full shadow-lg border border-purple-300 animate-pulse font-bold">
+              🍇 Chill Mode ({(activeEffects.grape / 1000).toFixed(1)}s)
+            </div>
+          )}
+          {activeEffects.booster > 0 && (
+            <div className="flex items-center gap-1 bg-blue-600/95 text-white text-[9px] px-2 py-0.5 rounded-full shadow-lg border border-blue-400 animate-bounce font-bold shadow-blue-500/20">
+              ⚡ Magic Booster ({(activeEffects.booster / 1000).toFixed(1)}s)
+            </div>
+          )}
+        </div>
+
+        {/* Grid Canvas with doubled resolution (800x800) for pristine sharp vectors, completely sharp rounded-none corners */}
+        <div className="w-full aspect-square overflow-hidden rounded-none border-2 border-slate-900 relative">
+          <canvas
+            ref={canvasRef}
+            width={800}
+            height={800}
+            className="cursor-none shadow-inner w-full h-full aspect-square bg-slate-950"
+          />
 
           {comboCount > 1 && (
-            <span className="text-[10px] sm:text-xs font-black text-pink-500 bg-pink-500/10 px-2.5 py-0.5 rounded border border-pink-500/20 animate-bounce">
+            <span className="absolute top-2 right-16 text-[9px] sm:text-xs font-black text-pink-500 bg-pink-500/10 px-1.5 py-0.5 rounded border border-pink-500/20 animate-bounce z-20">
               COMBO x{comboCount}!
             </span>
           )}
 
+          {/* LIZARD PAUSE OVERLAY - Transparent, elegant, showing ruka hua game */}
+          {isLizardPaused && (
+            <div className="absolute inset-0 bg-slate-950/15 flex flex-col items-center justify-center text-center p-4 z-20 select-none animate-fade-in">
+              <div className="bg-slate-950/90 border-2 border-amber-400 px-6 py-4 rounded-2xl flex flex-col items-center shadow-[0_12px_24px_rgba(0,0,0,0.6)]">
+                <span className="text-3xl mb-1 animate-pulse">⏸️</span>
+                <h3 className="text-base font-black text-amber-400 tracking-widest uppercase">
+                  GAME PAUSED
+                </h3>
+                <p className="text-[9px] text-slate-300 font-bold mt-1 max-w-[180px]">
+                  Tap center button to resume!
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* COUNTDOWN TIMER OVERLAY - Clear transparent background, showing food/snake perfectly */}
+          {countdown !== null && (
+            <div className="absolute inset-0 bg-slate-950/10 flex flex-col items-center justify-center text-center z-20 select-none animate-fade-in">
+              <div className="bg-slate-950/85 px-8 py-5 rounded-3xl border-2 border-amber-400/30 flex flex-col items-center justify-center shadow-2xl scale-110">
+                <span className="text-6xl font-black text-amber-400 animate-ping">
+                  {countdown}
+                </span>
+                <p className="text-[10px] text-slate-300 font-extrabold tracking-widest mt-2 uppercase animate-pulse">
+                  GET READY!
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Score & High Score status inside dark bezel (LCD HUD style) */}
+        <div className="mt-2 flex justify-between w-full px-2 text-slate-300 font-mono text-[11px] select-none relative">
+          <div className="flex items-center gap-1">
+            <span className="text-slate-500 font-bold uppercase tracking-tight">SCORE:</span>
+            <span className="font-bold text-violet-400">
+              {score} PTS
+            </span>
+          </div>
+          
+          <div className="flex items-center gap-1 relative">
+            <span className="text-slate-500 font-bold uppercase tracking-tight">HIGHSCORE:</span>
+            <span className={`font-bold transition-all duration-300 ${
+              blastActive
+                ? 'text-amber-400 scale-125 animate-pulse drop-shadow-[0_0_10px_rgba(251,191,36,0.9)]'
+                : 'text-emerald-400'
+            }`}>
+              {highScore} PTS
+            </span>
+
+            {/* Highscore break blast sparks floating animations */}
+            {blastActive && (
+              <div className="absolute -top-4 left-1/2 -translate-x-1/2 pointer-events-none z-50">
+                {blastSparks.map((spark) => (
+                  <span
+                    key={spark.id}
+                    className="absolute text-sm select-none animate-ping"
+                    style={{
+                      transform: `translate(${Math.cos(spark.angle) * 45}px, ${Math.sin(spark.angle) * 35}px) scale(1.6)`,
+                    }}
+                  >
+                    {spark.char}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* LEFT PANEL END */}
+      </div>
+
+      {/* RIGHT PANEL: Dpad & Controller Section - PC width optimized (35%) */}
+      <div className="w-full lg:w-[35%] flex flex-col justify-center items-center pt-1.5 lg:pt-0 border-t-2 lg:border-t-0 lg:border-l-2 border-slate-300 dark:border-slate-700/50 px-2 lg:px-4">
+        {/* RIGHT ALIGNED MENU BUTTON */}
+        <div className="w-full max-w-[95%] sm:max-w-[480px] lg:max-w-xs flex justify-end mb-3 px-1 sm:px-2">
           {isPlaying && (
             <button
-              onClick={() => { playClickSound(); setIsPaused(!isPaused); }}
-              className="bg-amber-400 hover:bg-amber-500 border border-amber-600 rounded px-2.5 py-1 text-[10px] sm:text-xs font-black shadow-[0_1.5px_0_#D97706] text-slate-950 tracking-wider transition-all active:translate-y-0.5 cursor-pointer z-25 flex items-center gap-1"
+              onClick={() => {
+                playClickSound();
+                setIsPaused(!isPaused);
+              }}
+              className="flex items-center gap-1.5 px-4 py-2 text-xs sm:text-sm font-black text-slate-950 bg-amber-400 hover:bg-amber-500 border-2 border-amber-600 rounded-xl shadow-[0_2px_0_#D97706] transition-all active:translate-y-0.5 cursor-pointer select-none"
+              title="Open game configurations and settings menu"
             >
               ⚙️ MENU
             </button>
           )}
         </div>
 
-        {/* 2. Screen Section (Unified dark arcade bezel) - Sharp corners with no wasted padding */}
-        <div className="w-full bg-slate-950 p-0.5 sm:p-1 rounded-none flex flex-col items-center shadow-inner relative overflow-hidden">
-          
-          {/* ACTIVE SCREEN EFFECTS INDICATOR */}
-          <div className="absolute top-2 left-2 z-10 flex flex-col gap-1 pointer-events-none">
-            {activeEffects.chili > 0 && (
-              <div className="flex items-center gap-1 bg-amber-500/95 text-white text-[9px] px-2 py-0.5 rounded-full shadow-lg border border-amber-300 animate-bounce font-bold">
-                🔥 Speed Boost ({(activeEffects.chili / 1000).toFixed(1)}s)
-              </div>
-            )}
-            {activeEffects.grape > 0 && (
-              <div className="flex items-center gap-1 bg-purple-500/95 text-white text-[9px] px-2 py-0.5 rounded-full shadow-lg border border-purple-300 animate-pulse font-bold">
-                🍇 Chill Mode ({(activeEffects.grape / 1000).toFixed(1)}s)
-              </div>
-            )}
-            {activeEffects.booster > 0 && (
-              <div className="flex items-center gap-1 bg-blue-600/95 text-white text-[9px] px-2 py-0.5 rounded-full shadow-lg border border-blue-400 animate-bounce font-bold shadow-blue-500/20">
-                ⚡ Magic Booster ({(activeEffects.booster / 1000).toFixed(1)}s)
-              </div>
-            )}
-          </div>
-
-          {/* Grid Canvas with doubled resolution (800x800) for pristine sharp vectors, completely sharp rounded-none corners */}
-          <div className="w-full aspect-square overflow-hidden rounded-none border-b-2 border-slate-900 relative">
-            <canvas
-              ref={canvasRef}
-              width={800}
-              height={800}
-              className="cursor-none shadow-inner w-full h-full aspect-square bg-slate-950"
-            />
-
-            {/* LIZARD PAUSE OVERLAY - Transparent, elegant, showing ruka hua game */}
-            {isLizardPaused && (
-              <div className="absolute inset-0 bg-slate-950/15 flex flex-col items-center justify-center text-center p-4 z-20 select-none animate-fade-in">
-                <div className="bg-slate-950/90 border-2 border-amber-400 px-6 py-4 rounded-2xl flex flex-col items-center shadow-[0_12px_24px_rgba(0,0,0,0.6)]">
-                  <span className="text-3xl mb-1 animate-pulse">⏸️</span>
-                  <h3 className="text-base font-black text-amber-400 tracking-widest uppercase">
-                    GAME PAUSED
-                  </h3>
-                  <p className="text-[9px] text-slate-300 font-bold mt-1 max-w-[180px]">
-                    Tap center button to resume!
-                  </p>
-                </div>
-              </div>
-            )}
-
-            {/* COUNTDOWN TIMER OVERLAY - Clear transparent background, showing food/snake perfectly */}
-            {countdown !== null && (
-              <div className="absolute inset-0 bg-slate-950/10 flex flex-col items-center justify-center text-center z-20 select-none animate-fade-in">
-                <div className="bg-slate-950/85 px-8 py-5 rounded-3xl border-2 border-amber-400/30 flex flex-col items-center justify-center shadow-2xl scale-110">
-                  <span className="text-6xl font-black text-amber-400 animate-ping">
-                    {countdown}
-                  </span>
-                  <p className="text-[10px] text-slate-300 font-extrabold tracking-widest mt-2 uppercase animate-pulse">
-                    GET READY!
-                  </p>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Score & High Score status inside dark bezel (LCD HUD style) */}
-          <div className="py-2.5 bg-slate-950 w-full flex justify-between px-4 text-slate-300 font-mono text-xs select-none relative">
-            <div className="flex items-center gap-1">
-              <span className="text-slate-500 font-bold uppercase tracking-tight">SCORE:</span>
-              <span className="font-bold text-violet-400">
-                {score} PTS
-              </span>
-            </div>
-            
-            <div className="flex items-center gap-1 relative">
-              <span className="text-slate-500 font-bold uppercase tracking-tight">HIGHSCORE:</span>
-              <span className={`font-bold transition-all duration-300 ${
-                blastActive
-                  ? 'text-amber-400 scale-125 animate-pulse drop-shadow-[0_0_10px_rgba(251,191,36,0.9)]'
-                  : 'text-emerald-400'
-              }`}>
-                {highScore} PTS
-              </span>
-
-              {/* Highscore break blast sparks floating animations */}
-              {blastActive && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 pointer-events-none z-50">
-                  {blastSparks.map((spark) => (
-                    <span
-                      key={spark.id}
-                      className="absolute text-sm select-none animate-ping"
-                      style={{
-                        transform: `translate(${Math.cos(spark.angle) * 45}px, ${Math.sin(spark.angle) * 35}px) scale(1.6)`,
-                      }}
-                    >
-                      {spark.char}
-                    </span>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-
-      {/* LEFT PANEL END */}
-      </div>
-
-      {/* RIGHT PANEL: Dpad & Controller Section - PC width optimized (35%), stretched on mobile to fill remaining space */}
-      <div className="w-full lg:w-[35%] flex flex-col justify-center items-center py-4 lg:py-0 border-t-4 lg:border-t-0 lg:border-l-4 border-slate-950 px-4 lg:px-6 flex-1 bg-slate-950/10">
         <Dpad
           currentDirection={direction}
           onChangeDirection={(dir) => {
