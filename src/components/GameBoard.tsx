@@ -109,6 +109,7 @@ export default function GameBoard({
   const foodEatenCountRef = useRef<number>(foodEatenCount);
   const [boosterEatenCount, setBoosterEatenCount] = useState(0);
   const boosterEatenCountRef = useRef<number>(0);
+  const [showExitConfirm, setShowExitConfirm] = useState(false);
   // High score explosion / blast animation states
   const [hasBrokenRecord, setHasBrokenRecord] = useState(false);
   const [blastActive, setBlastActive] = useState(false);
@@ -1996,6 +1997,52 @@ export default function GameBoard({
   return (
     <div className="flex flex-col lg:flex-row items-center lg:items-stretch w-full max-w-[650px] lg:max-w-[1100px] bg-slate-200 dark:bg-slate-800 p-0.5 sm:p-1.5 lg:p-4 rounded-none border-4 border-amber-400 dark:border-amber-500 shadow-[0_24px_50px_rgba(0,0,0,0.35)] gap-1 lg:gap-6 mx-auto relative overflow-hidden">
       
+      {/* EXIT CONFIRMATION POPUP MODAL */}
+      {showExitConfirm && (
+        <div className="absolute inset-0 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4 z-50 animate-fade-in">
+          <div className="bg-slate-950 border-4 border-red-500 rounded-3xl p-6 sm:p-8 w-full max-w-sm shadow-[0_20px_50px_rgba(0,0,0,0.85)] text-center relative">
+            <div className="w-16 h-16 bg-red-500/10 border-2 border-red-500 rounded-full flex items-center justify-center mx-auto mb-4 animate-bounce">
+              <span className="text-3xl">🚪</span>
+            </div>
+            
+            <h3 className="text-xl font-black text-red-500 uppercase tracking-widest">
+              Exit Game?
+            </h3>
+            
+            <p className="text-xs text-slate-300 font-medium mt-2 mb-6 leading-relaxed">
+              Are you sure you want to quit? Your active session will be ended and current progress of <span className="font-bold text-amber-400">{score} PTS</span> will be lost.
+            </p>
+            
+            <div className="flex flex-col gap-3">
+              {/* CANCEL BUTTON in Yellow */}
+              <button
+                onClick={() => {
+                  playClickSound();
+                  setShowExitConfirm(false);
+                  setIsPaused(false);
+                }}
+                className="w-full py-2.5 bg-amber-400 hover:bg-amber-500 text-slate-950 font-black rounded-xl border-2 border-amber-600 shadow-[0_3px_0_#D97706] active:translate-y-0.5 transition-all text-xs uppercase cursor-pointer"
+              >
+                🎮 Cancel & Keep Playing
+              </button>
+              
+              {/* CONFIRM EXIT BUTTON in Red */}
+              <button
+                onClick={() => {
+                  playClickSound();
+                  setShowExitConfirm(false);
+                  setIsPaused(false);
+                  resetGameAndBack();
+                }}
+                className="w-full py-2.5 bg-rose-600 hover:bg-rose-500 text-white font-black rounded-xl border-2 border-rose-800 shadow-[0_3px_0_#9F1239] active:translate-y-0.5 transition-all text-xs uppercase cursor-pointer"
+              >
+                🚪 Yes, Exit to Menu
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      
       {/* MID-GAME OPTIONS OVERLAY MENU WHEN PAUSED - Now full translucent floating card styled! */}
       {isPaused && (
         <div className="absolute inset-0 bg-slate-950/45 backdrop-blur-[1.5px] z-30 flex flex-col items-center justify-center p-4 sm:p-6 overflow-y-auto rounded-none animate-fade-in">
@@ -2320,19 +2367,35 @@ export default function GameBoard({
 
       {/* RIGHT PANEL: Dpad & Controller Section - PC width optimized (35%) */}
       <div className="w-full lg:w-[35%] flex flex-col justify-center items-center pt-1.5 lg:pt-0 border-t-2 lg:border-t-0 lg:border-l-2 border-slate-300 dark:border-slate-700/50 px-2 lg:px-4">
-        {/* RIGHT ALIGNED MENU BUTTON */}
-        <div className="w-full max-w-[95%] sm:max-w-[480px] lg:max-w-xs flex justify-end mb-3 px-1 sm:px-2">
+        {/* QUICK ACTIONS ROW: EXIT (Left - Red) and MENU (Right - Yellow) */}
+        <div className="w-full max-w-[95%] sm:max-w-[480px] lg:max-w-xs flex justify-between items-center mb-3 px-1 sm:px-2">
           {isPlaying && (
-            <button
-              onClick={() => {
-                playClickSound();
-                setIsPaused(!isPaused);
-              }}
-              className="flex items-center gap-1.5 px-4 py-2 text-xs sm:text-sm font-black text-slate-950 bg-amber-400 hover:bg-amber-500 border-2 border-amber-600 rounded-xl shadow-[0_2px_0_#D97706] transition-all active:translate-y-0.5 cursor-pointer select-none"
-              title="Open game configurations and settings menu"
-            >
-              ⚙️ MENU
-            </button>
+            <>
+              {/* EXIT BUTTON */}
+              <button
+                onClick={() => {
+                  playClickSound();
+                  setIsPaused(true);
+                  setShowExitConfirm(true);
+                }}
+                className="flex items-center gap-1.5 px-4 py-2 text-xs sm:text-sm font-black text-white bg-rose-600 hover:bg-rose-500 border-2 border-rose-700 rounded-xl shadow-[0_2px_0_#9F1239] transition-all active:translate-y-0.5 cursor-pointer select-none"
+                title="Exit game to main menu"
+              >
+                🚪 EXIT
+              </button>
+
+              {/* MENU BUTTON */}
+              <button
+                onClick={() => {
+                  playClickSound();
+                  setIsPaused(!isPaused);
+                }}
+                className="flex items-center gap-1.5 px-4 py-2 text-xs sm:text-sm font-black text-slate-950 bg-amber-400 hover:bg-amber-500 border-2 border-amber-600 rounded-xl shadow-[0_2px_0_#D97706] transition-all active:translate-y-0.5 cursor-pointer select-none"
+                title="Open game configurations and settings menu"
+              >
+                ⚙️ MENU
+              </button>
+            </>
           )}
         </div>
 
